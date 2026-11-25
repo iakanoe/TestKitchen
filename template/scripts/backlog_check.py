@@ -544,12 +544,35 @@ def gaps(bl):
     for r in sorted(bl.reqs, key=_req_key):
         if bl.reqs[r].observed and not bl.reqs[r].superseded_by:
             out.append((r, "observed in code, not yet confirmed by a person"))
+    # An installed but undefined project has nothing for the checks above to find, so it
+    # would look fully defined. These three gaps make "nothing defined yet" visible.
+    product = bl.root / "docs" / "product.md"
+    product_text = kl.read_text(product) if product.is_file() else None
+    if not product.is_file():
+        out.append(("docs/product.md", "missing: describe the product (playbooks/define.md, mode new)"))
+    elif product_text is None:
+        # kitchen_lib.read_text returns None for both causes, so the message names both.
+        out.append(("docs/product.md", "unreadable (not UTF-8 text, or no read permission): make it readable plain text"))
+    elif not product_has_content(product_text):
+        out.append(("docs/product.md", "only headings and comments: describe the product (playbooks/define.md, mode new)"))
+    if not bl.reqs:
+        out.append(("docs/requirements", "no requirements defined"))
+    code_files = [rel for rel in bl.files if kl.is_code(rel, bl.cfg)]
     claims = [g for t in tickets.values() if t.type == "epic" for g in t.list("code")]
     if claims:
-        for rel in bl.files:
-            if kl.is_code(rel, bl.cfg) and not kl.matches(rel, claims):
+        for rel in code_files:
+            if not kl.matches(rel, claims):
                 out.append((rel, "code that no epic's `code:` globs claim"))
+    elif code_files:
+        # One line, not one per file: until some epic claims code, every file is unmapped.
+        out.append(("code", f"{len(code_files)} code file(s), but no epic claims code with `code:` globs"))
     return out
+
+
+def product_has_content(text):
+    """True when docs/product.md holds more than the skeleton's headings and comments."""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+    return any(line.strip() and not line.lstrip().startswith("#") for line in text.splitlines())
 
 
 def refine(bl, origin_branches=None):

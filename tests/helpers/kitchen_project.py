@@ -73,6 +73,14 @@ Decided by the owner.
 Decided by the owner.
 """
 
+# A product description with real content, so the baseline project is fully defined.
+PRODUCT = """# Product
+
+## Vision
+
+Shop staff take payments and refund them without calling support.
+"""
+
 EPIC = """---
 id: EP-PAY
 type: epic
@@ -145,6 +153,7 @@ class Project:
             "kitchen.yml": kitchen or kitchen_yml(),
             "docs/requirements/PAY-payments.md": REQUIREMENTS,
             "docs/decision-log.md": DECISION_LOG,
+            "docs/product.md": PRODUCT,
             "backlog/PAY-payments/epic.md": EPIC.format(extra=""),
         }
         base.update(files or {})

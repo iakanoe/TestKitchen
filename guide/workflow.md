@@ -12,7 +12,7 @@ From your answer it works through the layers in order: vision, users and roles, 
 
 By lunch you have `docs/product.md`, `docs/requirements/PAY-payments.md` with lines such as `- PAY-R03: A refund never exceeds the order total.`, an epic `backlog/PAY-payments/epic.md`, and stories such as `US-PAY-03` with numbered acceptance criteria. Stories you gave an owner and whose questions are answered are `ready`.
 
-`python3 scripts/backlog_check.py --gaps` lists what still keeps the product from being fully defined: open decisions and spikes, drafts, unanswered questions, uncovered requirements, unconfirmed `(observed in code)` requirements, ready tickets not yet refined, and code no epic claims. [define.md](define.md) covers every mode.
+`python3 scripts/backlog_check.py --gaps` lists what still keeps the product from being fully defined: an empty `docs/product.md`, no requirements, open decisions and spikes, drafts, unanswered questions, uncovered requirements, unconfirmed `(observed in code)` requirements, ready tickets not yet refined, and code no epic claims. [define.md](define.md) covers every mode.
 
 ## Afternoon: deliver
 

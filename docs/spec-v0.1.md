@@ -269,7 +269,7 @@ Validation (errors): everything the original checks, generalized (frontmatter, I
 
 Coverage: every requirement that is not superseded is cited by at least one non-deferred story or task (constraints by the story they constrain); epics with `status: deferred` are excluded. Uncovered = WARN (ERROR with `--strict`).
 
-`--gaps` lists: open DECs and SPKs; tickets in `draft`; unanswered open questions; uncovered requirements; `(observed in code)` requirements; ready/in-progress tickets without `refined:`; code files (matching `code`, not ignored) that no epic's `code:` globs claim — only once at least one epic declares `code:`. Test debt is **not** a gap.
+`--gaps` lists: open DECs and SPKs; tickets in `draft`; unanswered open questions; uncovered requirements; `(observed in code)` requirements; ready/in-progress tickets without `refined:`; code files (matching `code`, not ignored) that no epic's `code:` globs claim. Test debt is **not** a gap. (Amended 2026-11-25, see the decision log, "An empty project is not fully defined": `--gaps` also lists a missing or skeleton-only `docs/product.md` and a project with no requirements, and while no epic declares `code:`, existing code is one gap in all.)
 
 `--refine` lists: stories with more live criteria than `split_threshold` (suggest a split); tickets citing superseded requirements; tickets whose open questions name a DEC that is now done (re-check them); with releases on, stories/tasks/spikes with no `release`; hotfix tickets done; tickets `in-progress` with no branch on origin.
 
@@ -370,7 +370,7 @@ Modes: `new`, `change`, `sweep`, `refine`, `adopt`, `slice`, `bug`, `hotfix`, `a
 - **bug:** triage first: (a) the code breaks an existing criterion → a fix story with `fixes: [US-…/ACn]` whose first test reproduces the bug, delivered normally; (b) no criterion covers the case → it is a missing requirement → `change` mode; (c) unclear → a DEC "is this intended?".
 - **hotfix:** production is broken: create a story with `hotfix: true` (criteria: the broken behavior restored), a decision-log entry saying why the lane is used, and a draft TASK "Refine after hotfix US-…" for the follow-up; `/deliver` then skips plan review and the questions round but keeps tests first, review, record, and gates.
 - **ask:** read-only. Answer from `docs/product.md`, requirements, ADRs, DECs, the decision log, and delivery records, citing each source. If nothing covers it, say "not defined in this repo" and offer to open a DEC or SPK through normal define. Never writes.
-- **Done:** `backlog_check.py --gaps` prints nothing: no open DEC/SPK/question, every requirement covered by ready/done tickets, no unmapped code, every ready ticket refined. Test debt is separate.
+- **Done:** `backlog_check.py --gaps` prints nothing: `docs/product.md` describes the product and at least one requirement exists (amended 2026-11-25), no open DEC/SPK/question, every requirement covered by ready/done tickets, no unmapped code, every ready ticket refined. Test debt is separate.
 - **Guardrails:** verify any platform or tool claim in its official docs before writing it; record constraints people report verbatim, with their uncertainty; after bulk renames, re-read headings and tables.
 - **Hand-off from deliver:** when `deliver.py next` finds nothing, `/deliver` runs define on the DECIDE list first, then the REFINE list, then asks what to build next.
 
