@@ -2,6 +2,16 @@
 
 Test Kitchen follows semantic versioning. Each release has a `## x.y.z — date` section, newest first, listing its changes and its migration notes: what a project on the previous version must do after `init.py update`. `init.py update` prints the migration notes of every release between the installed version and the new one, so every release keeps a `### Migration notes` subsection, even when it only says "None".
 
+## Unreleased
+
+### Fixed
+
+- `backlog_check.py --gaps` no longer reports an installed but undefined project as fully defined. It now lists a missing or skeleton-only `docs/product.md`, a project with no requirements, and existing code while no epic claims any with `code:`.
+
+### Migration notes
+
+- After updating, `--gaps` may list new lines for projects that never filled `docs/product.md`, defined no requirements, or gave no epic `code:` globs. Close them with `/define` (`new`, `adopt`, or `sweep`).
+
 ## 0.1.0 — 2026-11-25
 
 ### Added

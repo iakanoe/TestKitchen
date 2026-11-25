@@ -61,11 +61,13 @@ At the end of each topic the agent shows exactly what it will write and writes o
 
 The product is fully defined when `python3 scripts/backlog_check.py --gaps` prints nothing:
 
+- `docs/product.md` describes the product (more than the skeleton's headings and comments);
+- at least one requirement is defined;
 - no open decision, spike, or open question;
 - every requirement that is not superseded is covered by ready or done tickets;
 - no `(observed in code)` requirement left unconfirmed;
 - every ready ticket is refined;
-- no product code outside every epic's `code:` globs (checked once at least one epic declares `code:`).
+- every product code file is inside some epic's `code:` globs (while no epic declares `code:`, existing code is one gap in all).
 
 Test debt is reported separately and is not a gap.
 

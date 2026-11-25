@@ -183,7 +183,9 @@ Run `python3 scripts/backlog_check.py --gaps` and close each line, the ones bloc
 | An uncovered requirement | A story or task that cites it, a constraint citation, or (with the person's yes) deferring its epic or superseding it |
 | An `(observed in code)` requirement | The person confirms it (remove the marker), corrects it, or a DEC asks "Is this intended?" |
 | A ready ticket without `refined:` | `refine` |
-| Code no epic claims | Its globs added to an epic's `code:`, or a new epic |
+| Code no epic claims (one line per file, or one line in all when no epic declares `code:` yet) | Its globs added to an epic's `code:`, or a new epic |
+| `docs/product.md` missing or only headings and comments | `new` (or `adopt` for existing code) |
+| No requirements defined | `new`, `change`, or `adopt` |
 
 Stop when `--gaps` prints nothing or the person stops, and report what is left.
 
@@ -250,7 +252,7 @@ Read-only: never writes. Answer from `docs/product.md`, the requirements, the AD
 
 ## Done
 
-The product is fully defined when `python3 scripts/backlog_check.py --gaps` prints nothing: no open DEC, SPK, or question; every requirement covered by ready or done tickets; no code outside every epic's `code:` globs (once any epic declares them); every ready ticket refined.
+The product is fully defined when `python3 scripts/backlog_check.py --gaps` prints nothing: `docs/product.md` describes the product; at least one requirement exists; no open DEC, SPK, or question; every requirement covered by ready or done tickets; every code file inside some epic's `code:` globs; every ready ticket refined. An installed project with nothing defined yet is not "fully defined": it shows the first three of those as gaps.
 
 Test debt (`--test-debt`) is a separate list and never keeps the product from being defined.
 
