@@ -2,6 +2,28 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-25 — Adopt progress: all six epics written
+
+- Decision: the six epics are adopted and written: `INST` (29 requirements, 24 stories), `CONF` (25, 15 stories and 2 tasks), `DEF` (39, 29 stories), `DLV` (47, 37 stories), `HOST` (25, 12 stories), `GRD` (25, 10 stories); every story and adopted task is `done` with `adopted: true`; each epic has one draft "Pay test debt" task. Each epic's checkpoint was approved as shown. 18 DECs ask "Is this intended?" about behavior found while reading the code (DEC-GRD-03's GraphQL claim was checked in GitHub's GraphQL reference; DEC-GRD-04 collects the writes the guard does not see), and SPK-HOST-01 verifies the GitLab adapter on a real GitLab project.
+- Why: adopt mode, step 2 of `playbooks/define.md`.
+- Decided by: Ianick Noejovich (each epic's checkpoint).
+- Recorded in: `docs/requirements/*.md`; `backlog/*/`.
+- Not done yet (for the next session): step 4, confirming the 190 `(observed in code)` requirements (the person chose to do it after all epics were written); the 18 DECs and SPK-HOST-01; the six test-debt tasks (636 criteria on `--test-debt`, about 150 of them review-only).
+
+### 2026-11-25 — Adopt: test debt and review-only behavior
+
+- Decision: Test Kitchen's adopted criteria are recorded as test debt, with one draft task per epic ("Pay test debt: tagged tests for EP-<CODE>") that adds tagged tests in new test files without the no-trace marker. Behavior only a review can check (playbooks, docs, agent instructions) stays in adopted stories, and its criteria stay on the test-debt list, read as "review only".
+- Why: this repository's test files carry `test-kitchen: no-trace` because they hold example tickets, so tags there can never prove a criterion; paying the debt in separate files needs no framework change. Keeping review-only behavior in stories keeps its requirements covered without stretching what a task is.
+- Decided by: Ianick Noejovich.
+- Recorded in: the epics' test-debt tasks; `backlog_check.py --test-debt`.
+
+### 2026-11-25 — Adopt: product, epics, and owner
+
+- Decision: `docs/product.md` is written as confirmed (vision, three roles, six capabilities, boundaries). The existing code is split into six epics, each owning one code file: `INST` (`init.py`), `CONF` (`template/scripts/kitchen_lib.py`), `DEF` (`template/scripts/backlog_check.py`), `DLV` (`template/scripts/deliver.py`), `HOST` (`template/scripts/hosts.py`), `GRD` (`template/claude/hooks/guard.py`). Ianick Noejovich owns the epics and every adopted ticket. The six epics were drafted in parallel and de-duplicated before their checkpoints.
+- Why: one epic per capability gives every code file exactly one owner, so `--gaps` reports no unclaimed code.
+- Decided by: Ianick Noejovich.
+- Recorded in: `docs/product.md`; `backlog/<CODE>-*/epic.md`.
+
 ### 2026-11-25 — CI runs Python 3.9 on Ubuntu 24.04
 
 The product-test job on Python 3.9 failed before running anything: `actions/setup-python` publishes 3.9 builds only for Ubuntu 22.04 and 24.04, and `ubuntu-latest` is now 26.04. The 3.9 job pins `ubuntu-24.04`; the current-Python job stays on `ubuntu-latest`. 3.9 stays the supported minimum because it is the `python3` macOS ships. When GitHub retires the 24.04 image, the minimum has to move or 3.9 has to run another way. Recorded in `.github/workflows/ci.yml`. Decided while fixing CI on the first change request.
