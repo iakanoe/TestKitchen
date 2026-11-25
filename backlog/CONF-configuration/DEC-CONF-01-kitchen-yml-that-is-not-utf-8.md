@@ -7,7 +7,7 @@ source_reqs: [CONF-R01, CONF-R05]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -31,3 +31,10 @@ Proposal, not decided: treat an undecodable `kitchen.yml` as a configuration err
 ## Decides
 
 - Whether a fix story is filed against CONF-R01; US-CONF-01 stays as recorded either way.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): a `kitchen.yml` that is not valid UTF-8 is the configuration error `kitchen.yml: not valid UTF-8`, with no traceback.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements CONF-R26; confirmed CONF-R01, CONF-R05; US-CONF-16; decision log, "A kitchen.yml that is not UTF-8 is a configuration error".

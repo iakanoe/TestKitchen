@@ -19,5 +19,4 @@ The shared rules every Test Kitchen script, the guard, and the installer read th
 
 ## Open
 
-- DEC-CONF-01
-- DEC-CONF-02
+- None.

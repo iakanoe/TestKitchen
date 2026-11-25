@@ -7,7 +7,7 @@ source_reqs: [CONF-R11, CONF-R12]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -32,3 +32,10 @@ Proposal, not decided: reject a leading `/` with a message like the backslash on
 ## Decides
 
 - Whether a fix story is filed against CONF-R11 and CONF-R12; US-CONF-02 and US-CONF-07 stay as recorded either way.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): a glob with a leading `/` is rejected with a message like the backslash one.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements CONF-R27; confirmed CONF-R11, CONF-R12; US-CONF-17; decision log, "Globs never start with a slash".

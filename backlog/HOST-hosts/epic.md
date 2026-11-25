@@ -20,4 +20,4 @@ The host adapters let the workflow scripts work the same way on GitHub (pull req
 
 ## Open
 
-- DEC-HOST-01, DEC-HOST-02, SPK-HOST-01.
+- SPK-HOST-01.

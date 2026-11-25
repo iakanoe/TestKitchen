@@ -7,7 +7,7 @@ source_reqs: [GRD-R16]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -35,3 +35,10 @@ None recorded. Proposals:
 ## Decides
 
 US-GRD-07 (its git configuration criterion and notes). A change to the guard would be a new story in this epic.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): `git config` asks only when git's subcommand, after the global options, is `config`.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R27; confirmed GRD-R16; US-GRD-12; decision log, "git config asks only for the config subcommand".

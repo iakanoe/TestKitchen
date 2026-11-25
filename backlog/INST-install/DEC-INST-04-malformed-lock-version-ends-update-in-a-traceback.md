@@ -7,7 +7,7 @@ source_reqs: [INST-R27, INST-R17]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -35,3 +35,10 @@ None recorded. Proposals, not decisions:
 ## Decides
 
 No ticket waits on it. US-INST-22 records today's behavior; a fix becomes a new story under EP-INST.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): a `kitchen.lock` whose `version` is not a dotted number gives the same `error: kitchen.lock … Restore it from git history.` failure (exit 1) as other broken locks.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R34; superseded INST-R27 (by INST-R34); confirmed INST-R17; US-INST-27; decision log, "A lock version that is not a number is a broken lock".

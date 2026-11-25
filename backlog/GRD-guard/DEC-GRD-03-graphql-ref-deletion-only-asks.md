@@ -7,7 +7,7 @@ source_reqs: [GRD-R14]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -39,3 +39,10 @@ None recorded. Proposals:
 ## Decides
 
 US-GRD-06 (its host API criteria and notes). A change to the guard would be a new story in this epic.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): the GraphQL `deleteRef` mutation is denied like REST ref writes; `updatePullRequestBranch` is not denied (option (b) was not chosen) and still asks.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R28; confirmed GRD-R14; US-GRD-13; decision log, "The guard denies GraphQL deleteRef".
