@@ -2,6 +2,10 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-25 — An empty project is not fully defined
+
+Right after installing Test Kitchen on itself, `backlog_check.py --gaps` printed nothing although nothing was defined: with no requirements, coverage passed trivially, and the unmapped-code check only ran once some epic declared `code:`. `--gaps` now also lists a missing `docs/product.md`, a `docs/product.md` with only the skeleton's headings and comments, a project with no requirements, and, while no epic declares `code:`, existing code as one gap in all (one line per file once any epic declares `code:`, as before). This amends `docs/spec-v0.1.md` section 5. Decided by the project owner ("fix the hole first").
+
 ### 2026-11-25 — Test Kitchen installed on its own repository
 
 The root now runs Test Kitchen 0.1.0, installed from the local `template/` (the bootstrap case of "Dogfooding layout"): `tests: ["tests/**"]`, `code: ["init.py", "template/scripts/**", "template/claude/hooks/**"]` (the product code that needs tests first; playbooks and docs don't), `ignore: ["examples/**", "tests/fixtures/**"]`, host github. The test command runs the stdlib unittest suite through pytest, because unittest writes no JUnit XML; pytest is a development dependency only, installed in CI's toolchain step. The CI is two workflows rather than one with two jobs: `check.yml` (the installed framework file, changed only through `init.py update`) and `ci.yml` (the product tests on Python 3.9 and a current Python). The template's decision-log header was merged into this log's introduction. Next step for the owner: `/define adopt` on this repository, after which all work goes through `/define` and `/deliver`.

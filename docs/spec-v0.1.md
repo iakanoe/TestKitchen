@@ -269,7 +269,7 @@ Validation (errors): everything the original checks, generalized (frontmatter, I
 
 Coverage: every requirement that is not superseded is cited by at least one non-deferred story or task (constraints by the story they constrain); epics with `status: deferred` are excluded. Uncovered = WARN (ERROR with `--strict`).
 
-`--gaps` lists: open DECs and SPKs; tickets in `draft`; unanswered open questions; uncovered requirements; `(observed in code)` requirements; ready/in-progress tickets without `refined:`; code files (matching `code`, not ignored) that no epic's `code:` globs claim — only once at least one epic declares `code:`. Test debt is **not** a gap.
+`--gaps` lists: open DECs and SPKs; tickets in `draft`; unanswered open questions; uncovered requirements; `(observed in code)` requirements; ready/in-progress tickets without `refined:`; code files (matching `code`, not ignored) that no epic's `code:` globs claim. Test debt is **not** a gap. (Amended 2026-11-25, see the decision log, "An empty project is not fully defined": `--gaps` also lists a missing or skeleton-only `docs/product.md` and a project with no requirements, and while no epic declares `code:`, existing code is one gap in all.)
 
 `--refine` lists: stories with more live criteria than `split_threshold` (suggest a split); tickets citing superseded requirements; tickets whose open questions name a DEC that is now done (re-check them); with releases on, stories/tasks/spikes with no `release`; hotfix tickets done; tickets `in-progress` with no branch on origin.
 

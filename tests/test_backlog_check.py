@@ -28,6 +28,8 @@ BASELINE = {
     TASK2: ticket("TASK-PAY-02", type="task", reqs=("PAY-R02",), extra="refined: 2026-01-05\n"),
     "tests/test_pay.txt": "test_us_pay_01_ac1_refused pass\n[US-PAY-01/AC2] logged pass\n",
     "src/pay.py": "# Refund rules.\n# TODO(US-PAY-01): tidy the names\n",
+    # The epic claims the code, so the baseline has no unmapped-code gap.
+    "backlog/PAY-payments/epic.md": EPIC.format(extra='code: ["src/**"]\n'),
 }
 
 
@@ -415,6 +417,22 @@ class ModesTest(Base):
         self.assertNotIn("DEC-PAY-02", out)  # deferred: parked on purpose, not open
         self.assertNotIn("src/pay/ok.py", out)
         self.assertNotIn("SPK-PAY-01: draft", out)  # listed once, as open
+
+    def test_an_empty_project_is_not_fully_defined(self):
+        """An installed but undefined project must not pass --gaps by having nothing to check."""
+        skeleton = "# Product\n\n<!-- What this product is. -->\n\n## Vision\n\n<!-- Who uses it. -->\n"
+        files = {"docs/product.md": skeleton, "docs/requirements/PAY-payments.md": None,
+                 "backlog/PAY-payments/epic.md": None, US1: None, TASK2: None, "tests/test_pay.txt": None,
+                 "src/pay.py": "x = 1\n"}
+        p = self.project(files)
+        code, out = p.run("backlog_check.py", "--gaps")
+        self.assertEqual(code, 1, out)
+        for line in ("GAP   docs/product.md: only headings and comments: describe the product",
+                     "GAP   docs/requirements: no requirements defined",
+                     "GAP   code: 1 code file(s), but no epic claims code with `code:` globs"):
+            self.assertIn(line, out)
+        code, out = self.project({"docs/product.md": None}).run("backlog_check.py", "--gaps")
+        self.assertIn("GAP   docs/product.md: missing: describe the product", out)
 
     def test_no_gaps_exits_zero(self):
         code, out = self.project().run("backlog_check.py", "--gaps")
