@@ -1,6 +1,6 @@
 # Changelog
 
-Test Kitchen follows semantic versioning. Each release has a `## x.y.z — date` section, newest first, listing its changes and its migration notes: what a project on the previous version must do after `init.py update`. `init.py update` prints the migration notes of every release between the installed version and the new one, so every release keeps a `### Migration notes` subsection, even when it only says "None".
+Test Kitchen follows semantic versioning. Each release has a `## x.y.z — date` section, newest first, listing its changes and its migration notes: what a project on the previous version must do after `init.py update`. `init.py update` prints the migration notes of every release between the installed version and the new one, so every release keeps a `### Migration notes` subsection, even when it only says "None". Changes not yet released collect under `## Unreleased`, which becomes the next `## x.y.z — date` section when that release is tagged; `init.py update` reads versioned sections only.
 
 ## Unreleased
 
