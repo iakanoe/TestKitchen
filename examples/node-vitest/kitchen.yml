@@ -1,0 +1,8 @@
+# Example: a TypeScript project tested with Vitest.
+# Two reporters: the default one for the console, junit for {report}.
+# Vitest puts the describe titles and the test title in the testcase name,
+# so a tag such as [US-PAY-03/AC2] can go in either. Every key: guide/configuration.md.
+tests: ["**/*.test.ts", "**/*.test.tsx", "tests/**"]
+code: ["src/**"]
+test_command: "npx vitest run {files} --reporter=default --reporter=junit --outputFile.junit={report}"
+check_command: "npm run lint && npm run typecheck && npx vitest run"

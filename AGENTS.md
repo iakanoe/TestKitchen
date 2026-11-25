@@ -1,0 +1,69 @@
+# Agent instructions
+
+Instructions for any AI agent working in this repository (Claude Code, Codex, Cursor, or another), and a map for people.
+
+This project uses Test Kitchen, a framework that lets AI agents define and deliver software under guardrails. Requirements and tickets live in the repository, tests come first and are frozen, a fresh-context reviewer checks the work, every gap and decision is recorded, and nothing merges unless deterministic gates pass.
+
+## Where things live
+
+| Path | Holds |
+| --- | --- |
+| `docs/product.md` | Vision, users and roles, capabilities, boundaries |
+| `docs/requirements/` | Requirement lines with stable IDs (`PAY-R03`), one file per epic code |
+| `docs/architecture/` | Architecture decisions (ADRs); accepted ones bind every ticket |
+| `docs/decision-log.md` | Every decision, newest first |
+| `backlog/` | Epics, stories, tasks, decisions (DEC), and spikes (SPK); rules in `backlog/README.md`; `delivery/` folders hold each change request's description as its record |
+| `playbooks/` | The process: `define.md`, `deliver.md`, `review.md` |
+| `scripts/` | `deliver.py` (workflow steps and gates), `backlog_check.py` (backlog validation, gaps, refinement, test debt) |
+| `kitchen.yml` | Configuration: test and code globs, test command, host, autonomy |
+| `CONTRIBUTING.md` | Why the process works this way, what enforces it, how to run it |
+
+## Rules
+
+- **Answer from the repository.** For what the product does or must do, read `docs/` and `backlog/` and cite the files and IDs, keeping their qualifiers (observed in code, superseded, proposal, open). If they don't cover it, say "not defined in this repo" instead of guessing, and offer to open a DEC or SPK through `playbooks/define.md`.
+- **Propose before writing `docs/`.** Show the exact change and wait for a yes. Never upgrade a proposal, report, or open question to confirmed without a person's explicit confirmation.
+- **Agents never decide.** DEC options, acceptance criteria, `docs/`, and platform settings need a person. Code that meets an open DEC fails closed.
+- **Document everything.** A change is finished only when what it did and why is written where the next reader looks: code comments on every non-obvious decision and seam, READMEs when a command or workflow changes, the ticket, `docs/decision-log.md` for every decision, and the change request. Nothing lives only in chat.
+- **Never record secrets:** no credentials, tokens, keys, or sign-in links in code, docs, tickets, logs, or test fixtures.
+- **Commit only through the workflow.** Commit, push, open change requests, and merge only as `playbooks/deliver.md` and `playbooks/define.md` describe, or when a person asks. Running the delivery workflow is the request to do so for the ticket it works on.
+- **Stop and ask** for what `playbooks/deliver.md` lists under "Stop and ask"; decide and log everything else.
+
+## Workflow
+
+- **Define:** `playbooks/define.md` turns what people know into requirements, decisions, and tickets (modes `new`, `change`, `sweep`, `refine`, `adopt`, `slice`, `bug`, `hotfix`, `ask`).
+- **Deliver:** `playbooks/deliver.md` builds one ticket at a time: plan, failing tests first, implement, check, fresh-context review, record, change request, merge on green, verify.
+- **Review:** `playbooks/review.md`, always in a fresh context, given only the inputs it lists.
+
+In Claude Code: `/define`, `/deliver <ID>`, `/deliver next`, `/deliver all`. In other agents, ask for the same by naming the playbook.
+
+## Commands
+
+```bash
+python3 scripts/deliver.py next                  # the ticket to take, the other ready ones, why the rest wait
+python3 scripts/deliver.py context <ID>          # criteria, cited requirement text, ADRs, related tickets, body
+python3 scripts/deliver.py pr-body <ID>          # change-request description skeleton, one plan row per live criterion
+python3 scripts/deliver.py gate red <ID>         # each live criterion has a tagged test that runs and fails
+python3 scripts/deliver.py record --body-file=F --branch=B [--cr=N] [--url=U]   # write the description as the delivery record (then commit it)
+python3 scripts/deliver.py gate pr (--body-file=F | --from-record) --branch=B [--base=REV] [--head=REV]
+python3 scripts/deliver.py gate merge <N> --head=<SHA>      # host state + gate pr, before any merge
+python3 scripts/deliver.py merge-command <N> --head=<SHA>   # prints the one allowed merge command for this host
+python3 scripts/deliver.py check                 # backlog check + self-tests + the project's check or full test run (what CI runs)
+python3 scripts/deliver.py status                # ready / in progress / blocked / open decisions / gaps / test debt / last deliveries
+python3 scripts/deliver.py release-notes [<slice>]          # markdown from done stories, grouped by epic
+python3 scripts/backlog_check.py                 # validate the backlog and docs (--strict: uncovered requirements are errors)
+python3 scripts/backlog_check.py --pr-body=FILE  # also check a change-request description
+python3 scripts/backlog_check.py --gaps          # what keeps the product from being fully defined
+python3 scripts/backlog_check.py --refine        # refinement findings
+python3 scripts/backlog_check.py --test-debt     # adopted done tickets' criteria with no tagged test
+```
+
+## This project
+
+This repository is Test Kitchen itself, installed on its own root (see `docs/decision-log.md`, "Dogfooding layout").
+
+- **The product is `template/`**: what `init.py` installs into a project. The root copies of framework files (`AGENTS.md` framework part, `CLAUDE.md`, `CONTRIBUTING.md`, `playbooks/`, `scripts/`, `.claude/`, `.github/workflows/check.yml`, `backlog/README.md`) are an installed release; change them only through `init.py update`, never by hand. Change the product in `template/`, then reinstall.
+- **Instruction files in `template/` are stored inertly** (`AGENTS.md.tmpl`, `claude/`, `github/`, `gitlab/`) so tools never load them while you work here.
+- **Stack:** Python 3.9+ standard library plus PyYAML; no other runtime dependency. `init.py` is a single file that must work when piped (`curl … | python3 -`).
+- **Tests:** `python3 -m unittest discover -s tests` (stdlib); `deliver.py check` runs them through pytest for JUnit XML. Tests use no network: fake `gh`/`glab` executables on `PATH` and throwaway git repositories with a bare local `origin`. Test files holding example tickets start with `# test-kitchen: no-trace`.
+- **Rules:** English only; no kitchen metaphors anywhere except the name and the tagline; nothing from a source project or a local machine (paths, names, secrets); every pinned link names the version in `init.py` (`tests/test_release.py` checks it); every non-obvious rule gets a comment saying why.
+- **Spec and decisions:** `docs/spec-v0.1.md` is the approved v0.1 spec; `docs/decision-log.md` records every decision since.

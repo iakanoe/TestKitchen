@@ -1,0 +1,93 @@
+# Test Kitchen check (CONTRIBUTING.md, "What is enforced, and where").
+#
+# Runs in merge request pipelines and on branch pushes. The job is named `check` on
+# purpose: `scripts/deliver.py gate merge` refuses to merge unless a job named `check`
+# passed in the merge request's head pipeline, so keep the name. Where your plan allows
+# it, also protect the default branch and require pipelines to succeed before merging:
+# it is the only rule that holds even against a merge made outside the workflow.
+
+# One pipeline per push: merge request pipelines while a merge request is open, branch
+# pipelines otherwise (https://docs.gitlab.com/ci/yaml/workflow/), so the check never
+# runs twice for the same commit.
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+check:
+  # The workflow scripts need python3 (3.9 or later), pip, and git; this image has all
+  # three. If your toolchain needs another image, change it here and make sure the new
+  # one still has them.
+  image: python:3
+  variables:
+    # Full history (https://docs.gitlab.com/ci/runners/configure_runners/): `deliver.py
+    # gate pr` reads the branch's commits (the freeze commit, the reviewed commit, which
+    # files changed after each).
+    GIT_DEPTH: "0"
+  script:
+    # PyYAML for the workflow scripts.
+    - python3 -m pip install pyyaml
+
+    # Toolchain: install what `test_command` and `check_command` in kitchen.yml need
+    # (the language runtime and the project's dependencies). The installer replaces the
+    # one script line directly under the marker line when it recognizes the stack;
+    # otherwise, replace it yourself. Keep the marker line, and keep the toolchain
+    # line(s) directly under it, so the installer can find them. Whatever this installs,
+    # `python3` must still import PyYAML afterwards.
+    # TEST-KITCHEN: toolchain setup
+    - echo "WARNING Toolchain setup is not filled in. Replace this line in .gitlab-ci.yml with what test_command needs."
+
+    # Backlog check, the workflow scripts' self-tests, then `check_command` (or the full
+    # test run). The same command an agent runs locally at step 8.
+    - python3 scripts/deliver.py check
+
+    # Merge request pipelines only: the change-request checks.
+    #
+    # GitLab CI cannot rely on the live description: CI_MERGE_REQUEST_DESCRIPTION is cut
+    # at 2700 characters, and editing the description starts no pipeline
+    # (https://docs.gitlab.com/ci/variables/predefined_variables/). So CI reads the
+    # description from the delivery record committed on the branch (`deliver.py record`),
+    # and `deliver.py gate merge` compares that record with the live description before
+    # any merge.
+    #
+    # 1. `backlog_check.py --pr-body` on each delivery record this merge request adds or
+    #    changes: the description files every gap, decision, and platform change.
+    # 2. `deliver.py gate pr --from-record`: a ticket merge request followed
+    #    playbooks/deliver.md (plan rows, tests frozen first, no tagged test lost, test
+    #    changes listed, a final review with no CRITICAL finding on the code being merged,
+    #    the ticket done or why not, the record committed).
+    #
+    # Drafts are work in progress (a claimed ticket, no record yet), so both run once the
+    # merge request is ready. GitLab starts no pipeline when a draft is marked ready: mark
+    # it ready before the final push, or run a new pipeline for the merge request.
+    # CI_MERGE_REQUEST_DRAFT exists from GitLab 17.10; the title prefix covers older versions.
+    # Merged results pipelines are not supported in v0.1 (keep that project setting off):
+    # the merge gate reads the branch's own head pipeline and treats a merged results one
+    # as pending. The fallback below only keeps this job correct if one runs anyway: there
+    # CI_COMMIT_SHA is the merge result and the branch head is
+    # CI_MERGE_REQUEST_SOURCE_BRANCH_SHA; in other merge request pipelines that variable is
+    # empty and CI_COMMIT_SHA is the head.
+    - |
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        draft="${CI_MERGE_REQUEST_DRAFT:-false}"
+        case "$CI_MERGE_REQUEST_TITLE" in
+          Draft:*|"[Draft]"*|"(Draft)"*) draft=true ;;
+        esac
+        if [ "$draft" = "true" ]; then
+          echo "Draft merge request: the description checks and the delivery gate run once it is ready."
+        else
+          head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"
+          records=$(git diff --name-only --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA" "$head" -- backlog | grep '/delivery/' || true)
+          if [ -z "$records" ]; then
+            echo "No delivery record changed on this branch; the delivery gate below reports it."
+          fi
+          for record in $records; do
+            python3 scripts/backlog_check.py --pr-body="$record" || exit 1
+          done
+          python3 scripts/deliver.py gate pr --from-record \
+            --branch="$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" \
+            --base="$CI_MERGE_REQUEST_DIFF_BASE_SHA" --head="$head" || exit 1
+        fi
+      fi

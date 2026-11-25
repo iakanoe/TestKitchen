@@ -1,0 +1,7 @@
+# Python bytecode from running the scripts and tests.
+__pycache__/
+*.pyc
+# Per-machine Claude Code settings (the guard's sandbox opt-in lives here).
+.claude/settings.local.json
+# macOS folder metadata.
+.DS_Store
