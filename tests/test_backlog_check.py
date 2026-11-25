@@ -434,6 +434,11 @@ class ModesTest(Base):
             self.assertIn(line, out)
         code, out = self.project({"docs/product.md": None}).run("backlog_check.py", "--gaps")
         self.assertIn("GAP   docs/product.md: missing: describe the product", out)
+        p = self.project()
+        (p.root / "docs/product.md").write_bytes(b"# Product\n\n\xff\xfe not UTF-8\n")
+        code, out = p.run("backlog_check.py", "--gaps")
+        self.assertEqual(code, 1, out)
+        self.assertIn("GAP   docs/product.md: unreadable (not UTF-8 text, or no read permission)", out)
 
     def test_no_gaps_exits_zero(self):
         code, out = self.project().run("backlog_check.py", "--gaps")
