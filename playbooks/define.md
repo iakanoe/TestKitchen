@@ -252,7 +252,7 @@ Read-only: never writes. Answer from `docs/product.md`, the requirements, the AD
 
 ## Done
 
-The product is fully defined when `python3 scripts/backlog_check.py --gaps` prints nothing: `docs/product.md` describes the product; at least one requirement exists; no open DEC, SPK, or question; every requirement covered by ready or done tickets; every code file inside some epic's `code:` globs; every ready ticket refined. An installed project with nothing defined yet is not "fully defined": it shows the first three of those as gaps.
+The product is fully defined when `python3 scripts/backlog_check.py --gaps` prints nothing: `docs/product.md` describes the product; at least one requirement exists; no open DEC, SPK, or question; every requirement covered by ready or done tickets; every code file inside some epic's `code:` globs; every ready ticket refined. An installed project with nothing defined yet is not "fully defined": `--gaps` lists its skeleton-only `docs/product.md`, "no requirements defined", and, when code exists, one line for code no epic claims.
 
 Test debt (`--test-debt`) is a separate list and never keeps the product from being defined.
 

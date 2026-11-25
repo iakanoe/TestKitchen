@@ -549,7 +549,9 @@ def gaps(bl):
     product = bl.root / "docs" / "product.md"
     if not product.is_file():
         out.append(("docs/product.md", "missing: describe the product (playbooks/define.md, mode new)"))
-    elif not product_has_content(kl.read_text(product) or ""):
+    elif kl.read_text(product) is None:
+        out.append(("docs/product.md", "unreadable (not UTF-8 text): describe the product in plain text"))
+    elif not product_has_content(kl.read_text(product)):
         out.append(("docs/product.md", "only headings and comments: describe the product (playbooks/define.md, mode new)"))
     if not bl.reqs:
         out.append(("docs/requirements", "no requirements defined"))

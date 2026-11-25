@@ -420,7 +420,8 @@ class ModesTest(Base):
 
     def test_an_empty_project_is_not_fully_defined(self):
         """An installed but undefined project must not pass --gaps by having nothing to check."""
-        skeleton = "# Product\n\n<!-- What this product is. -->\n\n## Vision\n\n<!-- Who uses it. -->\n"
+        # The shipped skeleton, so a template edit that adds real text to it fails here.
+        skeleton = (Path(__file__).resolve().parent.parent / "template/docs/product.md").read_text(encoding="utf-8")
         files = {"docs/product.md": skeleton, "docs/requirements/PAY-payments.md": None,
                  "backlog/PAY-payments/epic.md": None, US1: None, TASK2: None, "tests/test_pay.txt": None,
                  "src/pay.py": "x = 1\n"}
