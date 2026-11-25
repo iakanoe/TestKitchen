@@ -16,11 +16,19 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.9", "3.14"]
+        include:
+          # 3.9 is the oldest Python Test Kitchen supports (macOS's bundled python3).
+          # setup-python publishes 3.9 builds only for Ubuntu 22.04 and 24.04, not for
+          # ubuntu-latest (26.04), so that job pins 24.04. When 24.04 is retired, the
+          # supported minimum has to move (or run 3.9 another way).
+          - python: "3.9"
+            os: ubuntu-24.04
+          - python: "3.14"
+            os: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6

@@ -2,6 +2,7 @@
 
 - Branch: `fix/gaps-empty-project`
 - Ticket: None
+- Change request: #1 https://github.com/iakanoe/TestKitchen/pull/1
 
 Written by `scripts/deliver.py record`. Everything below the marker is the change request's description, verbatim; `deliver.py gate pr` fails when it differs from the current description.
 
@@ -30,6 +31,7 @@ Constrained by: `docs/spec-v0.1.md` section 5 (amended).
 ## Decisions
 
 - `--gaps` treats an empty project as not fully defined. Log: An empty project is not fully defined
+- The Python 3.9 CI job runs on `ubuntu-24.04`, because setup-python has no 3.9 build for `ubuntu-latest` (26.04). Log: CI runs Python 3.9 on Ubuntu 24.04
 
 ## Platform changes
 
@@ -57,4 +59,5 @@ CRITICAL: 0, WARNING: 0, SUGGESTION: 0
 - `python3 -m unittest discover -s tests`: 257 tests OK (1 skipped: the Python stack of the agnosticism test, without pytest).
 - `python3 scripts/backlog_check.py`: 0 errors. `--gaps` at the root now prints the three expected lines (product.md skeleton, no requirements, 6 unclaimed code files).
 - The root copy of `scripts/backlog_check.py` and `playbooks/define.md` was updated only through `init.py update`; doctor passes.
+- CI, first run: `tests (3.9)` failed before running anything ("The version '3.9' with architecture 'x64' was not found for Ubuntu 26.04"); `check` and `tests (3.14)` passed. Fixed by pinning the 3.9 job to `ubuntu-24.04` (`.github/workflows/ci.yml`, CI config only, no code or test change).
 - The reviewer saw one full-suite run fail once while it ran a second test process in parallel; a rerun passed (257 OK) and the failing test wasn't captured. Not reproduced, so not filed.
