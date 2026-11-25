@@ -1,0 +1,32 @@
+# This repository's own CI: the product's tests (tests/, unittest, standard
+# library plus PyYAML) on the oldest Python Test Kitchen supports (3.9) and a
+# current one. The tests build throwaway git repositories and never use the
+# network.
+#
+# The root `check` job lives in .github/workflows/check.yml, installed by
+# init.py when this repository installed Test Kitchen on itself (dogfooding).
+# It is a framework file changed only through init.py update, so it stays a
+# separate workflow from this product-test job.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install PyYAML
+        run: python3 -m pip install pyyaml
+      - name: Run the tests
+        run: python3 -m unittest discover -s tests -v

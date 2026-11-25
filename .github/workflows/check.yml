@@ -1,0 +1,85 @@
+# Test Kitchen check (CONTRIBUTING.md, "What is enforced, and where").
+#
+# Runs on every pull request and on every push to the default branch. The job is named
+# `check` on purpose: `scripts/deliver.py gate merge` refuses to merge unless a job named
+# `check` passed on the pull request's head commit, so keep the name. Where your plan
+# allows it, also protect the default branch and require this job: it is the only rule
+# that holds even against a merge made outside the workflow.
+name: Check
+
+on:
+  pull_request:
+    # `edited` reruns the check when the description changes, because the description
+    # is checked too (it files every gap and decision, and must match its delivery record).
+    # `ready_for_review` runs the delivery gate once a draft becomes ready.
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    # The default branch. Change the list if yours has another name.
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Full history: `deliver.py gate pr` reads the branch's commits (the freeze
+          # commit, the reviewed commit, which files changed after each).
+          fetch-depth: 0
+
+      # The workflow scripts need Python 3.9 or later and PyYAML.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+      - name: Install PyYAML for the workflow scripts
+        run: python -m pip install pyyaml
+
+      # Toolchain: install what `test_command` and `check_command` in kitchen.yml need
+      # (the language runtime and the project's dependencies). The installer replaces the
+      # one step directly under the marker line when it recognizes the stack (for example
+      # Node: setup-node and `npm ci`; Python: installing the project and its test
+      # dependencies); otherwise, replace it yourself. Keep the marker line, and keep the
+      # step(s) directly under it, so the installer can find them. Whatever this step
+      # installs, `python3` must still import PyYAML afterwards: a step that sets up
+      # another Python must install PyYAML into it too.
+      # TEST-KITCHEN: toolchain setup (filled by hand: Test Kitchen's own tests are stdlib
+      # unittest, run through pytest so the test command can write JUnit XML)
+      - name: Install pytest
+        run: python3 -m pip install pytest
+
+      # Backlog check, the workflow scripts' self-tests, then `check_command` (or the
+      # full test run). The same command an agent runs locally at step 8.
+      - name: Check
+        run: python3 scripts/deliver.py check
+
+      # The description files every gap, decision, and platform change, pointing to tickets
+      # and decision-log entries that exist. Read from the event payload, so it is the live
+      # description; passed through an environment variable, never pasted into the script,
+      # so its text cannot run as shell.
+      - name: Check the description files every gap and decision
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s' "$PR_BODY" > "$RUNNER_TEMP/pr-body.md"
+          python3 scripts/backlog_check.py --pr-body="$RUNNER_TEMP/pr-body.md"
+
+      # A ticket pull request followed playbooks/deliver.md: a plan row per live criterion,
+      # tests frozen before any code, no tagged test lost, test changes listed, a final
+      # review with no CRITICAL finding on the code being merged, the ticket done (or why
+      # not), and the description committed as its delivery record. Drafts are work in
+      # progress (a claimed ticket), so the gate runs once the pull request is ready.
+      - name: Check the pull request followed the delivery workflow
+        if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          printf '%s' "$PR_BODY" > "$RUNNER_TEMP/pr-body.md"
+          python3 scripts/deliver.py gate pr --body-file="$RUNNER_TEMP/pr-body.md" \
+            --branch="$HEAD_REF" --base="$BASE_SHA" --head="$HEAD_SHA"

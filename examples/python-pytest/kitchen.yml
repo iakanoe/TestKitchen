@@ -1,0 +1,10 @@
+# Example: a Python project tested with pytest.
+# pytest writes JUnit XML itself (--junitxml). Tag tests with the identifier
+# form in the function or class name: test_us_pay_03_ac2_refund_denied,
+# class TestUS_PAY_03_AC2. Every key: guide/configuration.md.
+tests: ["tests/**", "**/test_*.py", "**/conftest.py"]
+code: ["src/**"]
+test_command: "python3 -m pytest {files} --junitxml={report}"
+# Lint and type-check too; this replaces the default full test run in
+# `deliver.py check`, so it runs the tests as well.
+check_command: "ruff check . && mypy src && python3 -m pytest"

@@ -1,0 +1,8 @@
+# Example: a JavaScript project tested with Node's built-in runner (node:test).
+# The spec reporter prints to the console; the junit reporter writes {report}.
+# Put the tag in the test's own name, such as it('[US-PAY-03/AC2] refuses …').
+# With no files given, `node --test` finds the test files itself.
+# Every key: guide/configuration.md.
+tests: ["test/**", "**/*.test.js", "**/*.test.mjs"]
+code: ["src/**", "lib/**"]
+test_command: "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination={report} {files}"

@@ -1,0 +1,10 @@
+# Example: a repository whose application lives in app/ (a Vitest project),
+# next to other folders Test Kitchen should not scan.
+# The command runs inside app/, so it uses {files:app}: the same test files
+# as {files}, with the leading app/ removed. {report} is an absolute path, so
+# it still works after the cd. Every key: guide/configuration.md.
+tests: ["app/**/*.test.ts", "app/tests/**"]
+code: ["app/src/**"]
+test_command: "cd app && npx vitest run {files:app} --reporter=default --reporter=junit --outputFile.junit={report}"
+check_command: "cd app && npm run lint && npx vitest run"
+ignore: ["infra/**", "**/fixtures/**"]

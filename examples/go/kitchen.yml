@@ -1,0 +1,10 @@
+# Example: a Go module.
+# `go test` does not write JUnit XML; gotestsum runs it and does
+# (go install gotest.tools/gotestsum@latest). `go test` takes packages, not
+# files, so this command leaves out {files} and always runs the whole suite;
+# tags still pick out each criterion's tests by name, for example a subtest
+# t.Run("[US-PAY-03/AC2] refund denied", …). Every key: guide/configuration.md.
+tests: ["**/*_test.go", "**/testdata/**"]
+code: ["**/*.go"]   # *_test.go files match both; a file matching both is a test
+test_command: "gotestsum --junitfile {report} -- ./..."
+check_command: "go vet ./... && go test ./..."

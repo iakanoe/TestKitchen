@@ -1,0 +1,13 @@
+# Test Kitchen configuration. Everything else is a convention.
+# Every key is explained in https://github.com/iakanoe/TestKitchen/blob/v0.1.0/guide/configuration.md
+tests: ["tests/**"]   # required: globs of test files (and their helpers)
+code: ["init.py", "template/scripts/**", "template/claude/hooks/**"]   # required: globs of product code
+test_command: "python3 -m pytest {files} -q --junitxml={report}"   # required: runs the given test files ({files}) and writes JUnit XML to {report}
+# check_command: "npm run lint && npm run typecheck"   # optional: replaces the default full test run in `deliver.py check`
+# verify: "Open the staging site and try the new behavior."   # optional: plain words; missing → "not verified after deploy"
+host: github   # optional: github | gitlab | manual; set by init.py --host
+# autonomy: merge   # optional: merge (agent merges on green) | pr (a person merges) | supervised (a person also approves plan and tests)
+# split_threshold: 6   # optional: refine flags stories with more live criteria than this
+# self_contained_tickets: false   # optional: tickets must read without the repository (no repo paths or links)
+# releases: [v1, v2, later]   # optional: release slices, in order; turns slice rules on
+ignore: ["examples/**", "tests/fixtures/**"]   # optional: excluded from every scan (kitchen.yml examples and the fixture projects the agnosticism test copies)
