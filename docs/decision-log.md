@@ -2,6 +2,10 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-25 — CI runs Python 3.9 on Ubuntu 24.04
+
+The product-test job on Python 3.9 failed before running anything: `actions/setup-python` publishes 3.9 builds only for Ubuntu 22.04 and 24.04, and `ubuntu-latest` is now 26.04. The 3.9 job pins `ubuntu-24.04`; the current-Python job stays on `ubuntu-latest`. 3.9 stays the supported minimum because it is the `python3` macOS ships. When GitHub retires the 24.04 image, the minimum has to move or 3.9 has to run another way. Recorded in `.github/workflows/ci.yml`. Decided while fixing CI on the first change request.
+
 ### 2026-11-25 — An empty project is not fully defined
 
 Right after installing Test Kitchen on itself, `backlog_check.py --gaps` printed nothing although nothing was defined: with no requirements, coverage passed trivially, and the unmapped-code check only ran once some epic declared `code:`. `--gaps` now also lists a missing `docs/product.md`, a `docs/product.md` with only the skeleton's headings and comments, a project with no requirements, and, while no epic declares `code:`, existing code as one gap in all (one line per file once any epic declares `code:`, as before). This amends `docs/spec-v0.1.md` section 5. Decided by the project owner ("fix the hole first").
