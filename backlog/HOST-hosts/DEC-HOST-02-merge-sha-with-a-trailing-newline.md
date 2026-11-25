@@ -7,7 +7,7 @@ source_reqs: [HOST-R14]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -31,3 +31,10 @@ Proposal: match the whole value (`fullmatch`, or `\Z` instead of `$`), through a
 ## Decides
 
 No open ticket waits on it. A change of behavior becomes a new story; the adopted stories stay as they are.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Fix: the merge sha check matches the whole value, so a trailing newline is refused.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements HOST-R27; confirmed HOST-R14; US-HOST-14; decision log, "The merge sha check matches the whole value".

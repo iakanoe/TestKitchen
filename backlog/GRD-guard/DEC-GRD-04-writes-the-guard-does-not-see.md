@@ -7,7 +7,7 @@ source_reqs: [GRD-R20, GRD-R22]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -37,3 +37,10 @@ None recorded. Proposals:
 ## Decides
 
 US-GRD-08 and US-GRD-09 (protected edits and shell writes); a change would be a new story in this epic.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): `git apply`, `patch`, and `git reset --hard` ask whenever the project has protected files; deleting or truncating `docs/decision-log.md` asks while appending stays free; branch-protection API writes are denied.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R29, GRD-R30, GRD-R31; superseded GRD-R20 (by GRD-R30); confirmed GRD-R22; US-GRD-14, US-GRD-15; decision log, "The guard asks before writes it cannot see". It narrows "The guard does not ask before decision-log edits": appending and edits stay free.

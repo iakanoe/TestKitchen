@@ -7,7 +7,7 @@ source_reqs: [DEF-R17, DEF-R18]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -34,3 +34,10 @@ None of these is recorded in `docs/`; both are proposals.
 ## Decides
 
 The DEF-R17 and DEF-R18 wording (confirm or supersede), and whether a fix story follows. No ticket is blocked by it.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): the `backlog_check.py` summary counts uncovered requirements, as errors with `--strict` and as warnings without it; exit codes are unchanged.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R40; confirmed DEF-R17, DEF-R18; US-DEF-30; decision log, "The strict summary counts uncovered requirements".

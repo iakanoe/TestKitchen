@@ -7,7 +7,7 @@ source_reqs: [DEF-R03, DEF-R18, DEF-R39]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -34,3 +34,10 @@ None of these is recorded in `docs/`; both are proposals.
 ## Decides
 
 The DEF-R39 wording, and a playbook wording change if (a). No ticket is blocked by it.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): the "Done" paragraph of `playbooks/define.md` is reworded to match `--gaps`: it adds unconfirmed observed requirements and says "cited by a story or task that is not deferred".
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R42; confirmed DEF-R03, DEF-R18, DEF-R39; US-DEF-32; decision log, "The playbook's Done paragraph follows --gaps".

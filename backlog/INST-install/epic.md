@@ -21,4 +21,4 @@ Installing Test Kitchen into a project's repository and keeping it current, thro
 
 ## Open
 
-- DEC-INST-01, DEC-INST-02, DEC-INST-03, DEC-INST-04.
+- None.

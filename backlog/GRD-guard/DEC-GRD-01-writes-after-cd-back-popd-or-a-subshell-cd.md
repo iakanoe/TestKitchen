@@ -7,7 +7,7 @@ source_reqs: [GRD-R22]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -41,3 +41,10 @@ None recorded. Proposals:
 ## Decides
 
 US-GRD-09 (its folder-following criterion and notes). A change to the guard would be a new story in this epic.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): after `cd -`, `popd`, or a `cd` inside a subshell or group, the guard treats the folder as unknown, so every later write in the call asks.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R26; confirmed GRD-R22; US-GRD-11; decision log, "The guard treats the folder as unknown after cd -, popd, or a subshell cd".

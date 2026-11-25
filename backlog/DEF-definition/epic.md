@@ -19,6 +19,4 @@ How what people know becomes requirements, decisions, and tickets, and how those
 
 ## Open
 
-- DEC-DEF-01
-- DEC-DEF-02
-- DEC-DEF-03
+- None.

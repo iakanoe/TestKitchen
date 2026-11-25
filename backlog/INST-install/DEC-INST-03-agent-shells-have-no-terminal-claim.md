@@ -7,7 +7,7 @@ source_reqs: [INST-R07, INST-R29]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -35,3 +35,10 @@ None recorded. Proposals, not decisions:
 ## Decides
 
 No ticket waits on it. US-INST-24 records the instructions as they are; a wording change is a new ticket under EP-INST.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (a): `AGENT-INSTALL.md` is reworded to "Your shell may have no terminal …; always pass `--yes`".
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R33; confirmed INST-R07, INST-R29; US-INST-26; decision log, "AGENT-INSTALL.md says the shell may have no terminal".

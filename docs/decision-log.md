@@ -2,6 +2,132 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-25 — The guard asks before writes it cannot see
+
+- Decision: Option (a): `git apply`, `patch`, and `git reset --hard` ask whenever the project has protected files; deleting or truncating `docs/decision-log.md` asks while appending stays free; branch-protection API writes are denied. Closes DEC-GRD-04.
+- Why: As the DEC recommended, each one is a plain command an agent might run by mistake, which is the guard's job; `git reset --hard` asking may slow some recoveries, an accepted cost.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R29, GRD-R30, GRD-R31; superseded GRD-R20 (by GRD-R30); confirmed GRD-R22; US-GRD-14, US-GRD-15. It narrows "The guard does not ask before decision-log edits": appending and edits stay free.
+
+### 2026-11-25 — The guard denies GraphQL deleteRef
+
+- Decision: Option (a): the GraphQL `deleteRef` mutation is denied like REST ref writes; `updatePullRequestBranch` is not denied (option (b) was not chosen) and still asks. Closes DEC-GRD-03.
+- Why: It brings the GraphQL path in line with the REST path and with "Guard hardening after the adversarial review" (host API calls that write refs are refused); GitHub's GraphQL reference lists `deleteRef` ("Delete a Git Ref."), https://docs.github.com/en/graphql/reference/git, checked 2026-11-25.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R28; confirmed GRD-R14; US-GRD-13.
+
+### 2026-11-25 — git config asks only for the config subcommand
+
+- Decision: Option (a): `git config` asks only when git's subcommand, after the global options, is `config`. Closes DEC-GRD-02.
+- Why: As the DEC recommended, it matches the stated rule and the guard's docstring, keeps every `git config` write asking, and removes prompts on ordinary file names.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R27; confirmed GRD-R16; US-GRD-12.
+
+### 2026-11-25 — The guard treats the folder as unknown after cd -, popd, or a subshell cd
+
+- Decision: Option (a): after `cd -`, `popd`, or a `cd` inside a subshell or group, the guard treats the folder as unknown, so every later write in the call asks. Closes DEC-GRD-01.
+- Why: As the DEC recommended, it fails toward asking, matches how the guard already treats a folder known only at run time, and is small.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements GRD-R26; confirmed GRD-R22; US-GRD-11.
+
+### 2026-11-25 — The merge sha check matches the whole value
+
+- Decision: Fix: the merge sha check matches the whole value, so a trailing newline is refused. Closes DEC-HOST-02.
+- Why: As the DEC proposed, it closes a gap in the fail-closed validation of the one function that defines the allowed merge command; HOST-R14 already says only the full 40-character sha is accepted.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements HOST-R27; confirmed HOST-R14; US-HOST-14.
+
+### 2026-11-25 — Unreadable host CLI output is a host error
+
+- Decision: Fix: host CLI output that is not JSON, when listing the branches of open change requests or reading a change request, is a HostError naming the command. Closes DEC-HOST-01.
+- Why: As the DEC proposed, an unreadable answer is treated like a failing CLI, so `next` stops with its own message and `status` uses its offline fallback instead of a traceback.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements HOST-R26; confirmed HOST-R04, HOST-R06; US-HOST-13. HOST-R05 stays marked as observed in code until SPK-HOST-01 runs.
+
+### 2026-11-25 — pr-body prints the playbook's Ticket line per type
+
+- Decision: Option (b): `deliver.py pr-body` prints the playbook's wording per type (`None. Spike <ID>: …` for a spike, `None. Decides <ID> …` for a decision) and refuses an epic. Closes DEC-DLV-03.
+- Why: As the DEC recommended, the script is where facts come from, so its skeleton should already say what the playbook asks for, and refusing an epic matches "an epic is not delivered".
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R50; superseded DLV-R06 (by DLV-R50); confirmed DLV-R37; US-DLV-40.
+
+### 2026-11-25 — Release notes leave out adopted tickets
+
+- Decision: Option (b): release notes leave adopted tickets out on every path. Closes DEC-DLV-02.
+- Why: As the DEC recommended, adopted tickets record behavior that shipped before the backlog existed, so listing them as a release's changes misleads, and the tag and no-tag paths then agree.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R49; superseded DLV-R27 (by DLV-R49); US-DLV-39.
+
+### 2026-11-25 — gate pr reads tickets and kitchen.yml at --head
+
+- Decision: Option (b): `deliver.py gate pr` reads the ticket files and `kitchen.yml` at `--head` too, so it judges exactly the revision it names. Closes DEC-DLV-01.
+- Why: The gate then judges one revision consistently even when CI checks out another commit than the one it names.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R48; confirmed DLV-R14, DLV-R16, DLV-R20; US-DLV-38.
+
+### 2026-11-25 — The playbook's Done paragraph follows --gaps
+
+- Decision: Option (a): the "Done" paragraph of `playbooks/define.md` is reworded to match `--gaps`: it adds unconfirmed observed requirements and says "cited by a story or task that is not deferred". Closes DEC-DEF-03.
+- Why: As the DEC recommended, the script's rule is tested and drafts already show as their own gap, so only the text was out of step.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R42; confirmed DEF-R03, DEF-R18, DEF-R39; US-DEF-32.
+
+### 2026-11-25 — Epics stay exempt from readiness
+
+- Decision: Option (b): epics stay exempt from the readiness rules, and `backlog/README.md`, "Readiness", says that it applies to tickets other than epics. Closes DEC-DEF-02.
+- Why: As the DEC recommended, it matches the recorded choice that epics need only their fields ("Script choices made while building v0.1"), and requiring owners could fail installed projects whose epics use `TBD`.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R41; confirmed DEF-R09; US-DEF-31.
+
+### 2026-11-25 — The strict summary counts uncovered requirements
+
+- Decision: Option (a): the `backlog_check.py` summary counts uncovered requirements, as errors with `--strict` and as warnings without it; exit codes are unchanged. Closes DEC-DEF-01.
+- Why: As the DEC recommended, a summary that disagrees with the lines under it misleads people and CI logs, and no exit code changes.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R40; confirmed DEF-R17, DEF-R18; US-DEF-30.
+
+### 2026-11-25 — Globs never start with a slash
+
+- Decision: Option (a): a glob with a leading `/` is rejected with a message like the backslash one. Closes DEC-CONF-02.
+- Why: As the DEC recommended, it keeps one meaning per pattern, and the reason backslashes are rejected (they would silently match nothing) applies equally.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements CONF-R27; confirmed CONF-R11, CONF-R12; US-CONF-17.
+
+### 2026-11-25 — A kitchen.yml that is not UTF-8 is a configuration error
+
+- Decision: Option (a): a `kitchen.yml` that is not valid UTF-8 is the configuration error `kitchen.yml: not valid UTF-8`, with no traceback. Closes DEC-CONF-01.
+- Why: As the DEC recommended, it matches CONF-R05 and the configuration guide's promise of one clear message per invalid value.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements CONF-R26; confirmed CONF-R01, CONF-R05; US-CONF-16.
+
+### 2026-11-25 — A lock version that is not a number is a broken lock
+
+- Decision: Option (a): a `kitchen.lock` whose `version` is not a dotted number gives the same `error: kitchen.lock … Restore it from git history.` failure (exit 1) as other broken locks. Closes DEC-INST-04.
+- Why: As the DEC recommended, one check makes every lock problem read the same way.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R34; superseded INST-R27 (by INST-R34); confirmed INST-R17; US-INST-27.
+
+### 2026-11-25 — AGENT-INSTALL.md says the shell may have no terminal
+
+- Decision: Option (a): `AGENT-INSTALL.md` is reworded to "Your shell may have no terminal …; always pass `--yes`". Closes DEC-INST-03.
+- Why: As the DEC recommended, it keeps the instruction to always pass `--yes` and drops a claim nobody has checked across agents.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R33; confirmed INST-R07, INST-R29; US-INST-26.
+
+### 2026-11-25 — Python 3.6 and older may fail with a syntax error
+
+- Decision: Option (b): Python 3.6 and older getting a syntax error before the version check is accepted, and the code comment in `init.py` is corrected to say that Python 3.7 and later get the sentence. Closes DEC-INST-02.
+- Why: As the DEC recommended, Python 3.6 is long out of support, and keeping it parseable would need a style exception in `init.py`.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R32; confirmed INST-R03; TASK-INST-02. INST-R03 also lost its reference to this DEC (a wording fix).
+
+### 2026-11-25 — Host switch on update tells the person to set kitchen.yml's host
+
+- Decision: Option (a): `kitchen.yml` stays untouched; an `update --host <new host>` that changes the host prints that `host:` in `kitchen.yml` must be set to the new host, and `doctor`'s host-mismatch fix offers both directions (set `host:` in `kitchen.yml` to the installed host, or run `update --host <other host>`). Closes DEC-INST-01.
+- Why: As the DEC recommended, it keeps the recorded rule that `update` never edits the project's configuration ("Installer choices made while building v0.1") and stops `doctor` from pointing the person back to the host they just left.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R30, INST-R31; confirmed INST-R20, INST-R25; US-INST-25.
+
 ### 2026-11-25 — Adopt progress: all six epics written
 
 - Decision: the six epics are adopted and written: `INST` (29 requirements, 24 stories), `CONF` (25, 15 stories and 2 tasks), `DEF` (39, 29 stories), `DLV` (47, 37 stories), `HOST` (25, 12 stories), `GRD` (25, 10 stories); every story and adopted task is `done` with `adopted: true`; each epic has one draft "Pay test debt" task. Each epic's checkpoint was approved as shown. 18 DECs ask "Is this intended?" about behavior found while reading the code (DEC-GRD-03's GraphQL claim was checked in GitHub's GraphQL reference; DEC-GRD-04 collects the writes the guard does not see), and SPK-HOST-01 verifies the GitLab adapter on a real GitLab project.

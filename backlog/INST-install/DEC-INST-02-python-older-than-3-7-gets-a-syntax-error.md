@@ -7,7 +7,7 @@ source_reqs: [INST-R03]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -36,3 +36,10 @@ None recorded. Proposals, not decisions:
 ## Decides
 
 No ticket waits on it. US-INST-02/AC1 records today's behavior for 3.7 and 3.8; a change becomes a new story or task under EP-INST.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (b): Python 3.6 and older getting a syntax error before the version check is accepted, and the code comment in `init.py` is corrected to say that Python 3.7 and later get the sentence.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements INST-R32; confirmed INST-R03; TASK-INST-02; decision log, "Python 3.6 and older may fail with a syntax error". INST-R03 also lost its reference to this DEC (a wording fix).

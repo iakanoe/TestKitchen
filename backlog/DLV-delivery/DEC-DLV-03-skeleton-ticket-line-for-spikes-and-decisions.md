@@ -7,7 +7,7 @@ source_reqs: [DLV-R06, DLV-R37]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -37,3 +37,10 @@ None recorded. Proposals, not decided anywhere:
 
 - US-DLV-04 (the skeleton's Ticket line for other ticket types).
 - US-DLV-29 (the Ticket line the spike and decision variants ask for).
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (b): `deliver.py pr-body` prints the playbook's wording per type (`None. Spike <ID>: …` for a spike, `None. Decides <ID> …` for a decision) and refuses an epic.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R50; superseded DLV-R06 (by DLV-R50); confirmed DLV-R37; US-DLV-40; decision log, "pr-body prints the playbook's Ticket line per type".

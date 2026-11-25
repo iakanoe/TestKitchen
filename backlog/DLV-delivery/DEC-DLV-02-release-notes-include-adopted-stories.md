@@ -7,7 +7,7 @@ source_reqs: [DLV-R27]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -36,3 +36,10 @@ None recorded. Proposals, not decided anywhere:
 ## Decides
 
 - US-DLV-21 (which done tickets the release notes choose).
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (b): release notes leave adopted tickets out on every path.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R49; superseded DLV-R27 (by DLV-R49); US-DLV-39; decision log, "Release notes leave out adopted tickets".

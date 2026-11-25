@@ -7,7 +7,7 @@ source_reqs: [DLV-R14, DLV-R16, DLV-R20]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -38,3 +38,10 @@ None recorded. Proposals, not decided anywhere:
 
 - US-DLV-10 (branch, plan rows, and status are judged against the ticket file).
 - US-DLV-14 (the hotfix flag and the autonomy level are read from the same files).
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Option (b): `deliver.py gate pr` reads the ticket files and `kitchen.yml` at `--head` too, so it judges exactly the revision it names.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DLV-R48; confirmed DLV-R14, DLV-R16, DLV-R20; US-DLV-38; decision log, "gate pr reads tickets and kitchen.yml at --head".

@@ -19,4 +19,4 @@ Delivery takes a ready ticket to merged, verified work under deterministic gates
 
 ## Open
 
-- DEC-DLV-01, DEC-DLV-02, DEC-DLV-03
+- None.

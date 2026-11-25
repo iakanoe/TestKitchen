@@ -7,7 +7,7 @@ source_reqs: [HOST-R04, HOST-R05, HOST-R06]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -31,3 +31,10 @@ Proposal: treat unparseable CLI output as a HostError in the adapter, with a mes
 ## Decides
 
 No open ticket waits on it. A change of behavior becomes a new story; the adopted stories stay as they are.
+
+## Outcome
+
+- Date: 2026-11-25.
+- Answer: Fix: host CLI output that is not JSON, when listing the branches of open change requests or reading a change request, is a HostError naming the command.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements HOST-R26; confirmed HOST-R04, HOST-R06; US-HOST-13; decision log, "Unreadable host CLI output is a host error". HOST-R05 stays marked as observed in code until SPK-HOST-01 runs.
