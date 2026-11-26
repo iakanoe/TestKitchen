@@ -2,6 +2,14 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-DEF-04: replaces in the playbook and README
+
+- Decision: `template/playbooks/define.md` gains a Checkpoints bullet "Contradicting a done criterion" (warn, show the criterion, list it under `replaces:` on a yes; without the yes, a DEC), and each of its three "never rewritten" places (Applying a decision, Checkpoints, `change` step 4) names the one allowed edit, crossing out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)` when the replacing ticket is delivered. `template/backlog/README.md` documents `replaces:` in its frontmatter example and field list next to `fixes:`, and its "never rewritten" rule names the same edit. Delivers TASK-DEF-04 (DEC-DEF-04).
+- Why: one wording of the cross-out everywhere, matching the checker's message (US-DEF-33).
+- Decided by: the delivering agent, within TASK-DEF-04's criteria.
+- Recorded in: the two files; this repository's installed copies refreshed through `init.py update`.
+- Gap filed: the guides (`guide/define.md`, `guide/why.md`) still say done tickets are never rewritten: DEC-DEF-07.
+
 ### 2026-11-26 — TASK-DEF-03: Done wording follows --gaps
 
 - Decision: the "Done" paragraph of `template/playbooks/define.md` and `guide/define.md`, "Done means no gaps", now list unconfirmed `(observed in code)` requirements and draft stories and tasks as gaps, and define coverage as "not superseded and not in a deferred epic … cited by a story or task that is not deferred", as `--gaps` checks (the deferred-epic exception confirmed in `uncovered()`). The "refined" item was left as it is: changing it to ready or in-progress tickets is beyond the criteria, so it is filed as DEC-DEF-06. Delivers TASK-DEF-03 (DEC-DEF-03, option (a), as widened on 2026-11-26).
