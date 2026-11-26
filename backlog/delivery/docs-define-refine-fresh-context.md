@@ -32,7 +32,7 @@ Constrained by: `playbooks/define.md` (refine), `backlog/README.md`.
 
 ## Decisions
 
-- US-DLV-42 becomes an untestable task with a resumed subagent and a split-off `/define` part. Log: US-DLV-42 becomes TASK-DLV-03
+- The fresh-context story becomes an untestable task with a resumed subagent and a split-off `/define` part. Log: The fresh-context story becomes a task
 - The worker agent and when a ticket is finished. Log: TASK-DLV-03 names its worker agent and when a ticket is finished
 - The checkout after ready to merge, the agent file, and DLV-R55. Log: TASK-DLV-03 settles the checkout, the agent file, and DLV-R55
 - Refinement pauses until the spike; TASK-DEF-05 is ready. Log: TASK-DLV-03 waits for SPK-DLV-02; TASK-DEF-05 is ready
