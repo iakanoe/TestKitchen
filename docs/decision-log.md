@@ -2,6 +2,14 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — US-DEF-30: summary counts and a frozen-test fix
+
+- Decision: `backlog_check.py` computes the uncovered requirements before the summary and adds them to the error count with `--strict` and to the warning count without it; output order and exit codes are unchanged. Delivers US-DEF-30 (DEF-R40, DEC-DEF-01).
+- Frozen-test change: after the freeze, `tests/test_def_summary.py` held the literal to-do marker word as fixture text, which this repository's own trace scan reported as an unowned marker (`doctor` failed). The word is now assembled from parts; the test asserts exactly the same thing. Allowed because it contradicted a project rule (every such marker names a ticket); listed under the change request's "Test changes".
+- Lesson for the next deliveries here: run `python3 scripts/backlog_check.py` on this repository before the freeze commit, since test fixtures are traced here too.
+- Decided by: the delivering agent, within US-DEF-30's criteria.
+- Recorded in: `template/scripts/backlog_check.py`, `tests/test_def_summary.py`; this repository's installed copy refreshed through `init.py update`.
+
 ### 2026-11-26 — US-CONF-17: globs that start with a slash
 
 - Decision: `_globs` in `kitchen_lib.py` refuses a glob that starts with `/` after trimming and removing one leading `./`, listing the globs as written, with the message "`<key>` globs are relative to the repository root and never start with `/`: [...]". The backslash check no longer returns before it, so a key with both problems reports both, one line each. Delivers US-CONF-17 (CONF-R28, DEC-CONF-02 as widened).
