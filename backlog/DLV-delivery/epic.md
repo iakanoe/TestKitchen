@@ -19,4 +19,4 @@ Delivery takes a ready ticket to merged, verified work under deterministic gates
 
 ## Open
 
-- None.
+- SPK-DLV-01, SPK-DLV-02.
