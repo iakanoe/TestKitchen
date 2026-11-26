@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-INST-03: terminal wording
+
+- Decision: `AGENT-INSTALL.md` now says the agent's shell may have no terminal, tells it to always pass `--yes`, and says that without `--yes` the installer stops before writing only when there is no terminal (and asks on one when there is), keeping the exit-code-2 clause for a missing answer. `guide/install.md`, "Answering without a terminal", now reads "(CI; an agent's shell may have none)"; its existing sentence already limits the stop to "without a terminal and without `--yes`". Delivers TASK-INST-03 (DEC-INST-03, option (a), as widened on 2026-11-26).
+- Why: neither file may state as fact what was checked in only one agent.
+- Decided by: the delivering agent, within TASK-INST-03's criteria.
+- Recorded in: the two files.
+
 ### 2026-11-26 — TASK-INST-02: the Python version comment
 
 - Decision: the comment at `init.py`'s version check now says Python 3.7 and later get the sentence, and that 3.6 and older stop earlier with a syntax error on the `__future__` import (accepted; it points to the decision log rather than naming the closed DEC, so the checker does not flag a "decided" seam). The check itself is unchanged. Delivers TASK-INST-02 (DEC-INST-02, option (b)).
