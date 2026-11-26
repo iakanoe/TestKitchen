@@ -327,14 +327,23 @@ def parse_config(data, root=None):
 def load_config(root):
     """Read and validate `<root>/kitchen.yml`. The host is detected from origin when absent.
 
+    A missing file, a file that is not UTF-8, invalid YAML, or invalid values raise
+    ConfigError, whose text lists every problem, one per line.
+
     The framework files kitchen.lock lists are loaded into `Config.framework`.
     """
     path = Path(root) / CONFIG_FILE
     if not path.is_file():
         raise ConfigError(f"{CONFIG_FILE}: not found at {path}; run init.py to install Test Kitchen")
     yaml = _yaml()
+    # Only the read can fail on encoding: a file saved as Latin-1 or UTF-16 is one clear
+    # configuration error, not a traceback (CONF-R26; US-CONF-16/AC1).
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        raise ConfigError(f"{CONFIG_FILE}: not valid UTF-8")
+    try:
+        data = yaml.safe_load(text)
     except yaml.YAMLError as e:
         raise ConfigError(f"{CONFIG_FILE}: invalid YAML: {e}")
     cfg = parse_config(data, root)
