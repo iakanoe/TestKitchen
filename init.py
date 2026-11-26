@@ -34,8 +34,10 @@ from __future__ import annotations
 
 import sys
 
-# Checked before anything else so an old interpreter gets a sentence, not a
-# traceback. The rest of the file uses syntax that Python 3.9 accepts.
+# Checked before anything else so Python 3.7 and later get a sentence, not a
+# traceback. Python 3.6 and older stop earlier, with a syntax error on the
+# `__future__` import above (accepted; see the decision log). The rest of the
+# file uses syntax that Python 3.9 accepts.
 if sys.version_info < (3, 9):  # pragma: no cover - depends on the interpreter
     sys.stderr.write(
         "Test Kitchen needs Python 3.9 or later; this is Python %d.%d.\n"
