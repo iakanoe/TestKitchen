@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit fe8404812898)",
+  "source": "local checkout (commit 0d9ef1a820c6)",
   "options": {
     "host": "github",
     "no_claude": false,
@@ -30,7 +30,7 @@
     "scripts/backlog_check.py": "353d5f3e641d8cb284008591d17a136c5ef0994c2e87e60eada34ab9b0836c6a",
     "scripts/deliver.py": "0a22012265504cb22b63f44c178903bf6216f379d2391078c6ac59427c5985b1",
     "scripts/hosts.py": "f47c82d6a505e39c4a637cced90dfd13d368fe88bddb42d43fb514b8b33708a9",
-    "scripts/kitchen_lib.py": "d6ac5062804c2b2e87a89f161c5f0fac85d0f9a8a3d59338c887c2174b154e57"
+    "scripts/kitchen_lib.py": "7b46be36b258c864269eea11200e188d704cf5e419e78f0584f24168b8a489b5"
   },
   "side_by_side": []
 }
