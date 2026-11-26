@@ -2,6 +2,14 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — US-CONF-17: globs that start with a slash
+
+- Decision: `_globs` in `kitchen_lib.py` refuses a glob that starts with `/` after trimming and removing one leading `./`, listing the globs as written, with the message "`<key>` globs are relative to the repository root and never start with `/`: [...]". The backslash check no longer returns before it, so a key with both problems reports both, one line each. Delivers US-CONF-17 (CONF-R28, DEC-CONF-02 as widened).
+- Why: one normalization for checking and matching; every problem at once (CONF-R05).
+- Decided by: the delivering agent, within US-CONF-17's criteria.
+- Recorded in: `template/scripts/kitchen_lib.py`, `tests/test_conf_rooted_globs.py`; this repository's installed copy refreshed through `init.py update`.
+- Review suggestion noted, not taken: a test for `"./ /vendor/**"` (whitespace after `./`), which CONF-R28 does not name.
+
 ### 2026-11-26 — US-CONF-16: a kitchen.yml that is not UTF-8
 
 - Decision: `load_config` reads `kitchen.yml` in its own `try` and turns a `UnicodeDecodeError` into `ConfigError("kitchen.yml: not valid UTF-8")`; YAML errors keep their separate handling. The existing callers already print a `ConfigError` as `ERROR` lines and exit 1, so `--config` and `backlog_check.py` needed no change. The docstring now lists the failure modes. Delivers US-CONF-16 (CONF-R26, DEC-CONF-01).
