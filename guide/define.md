@@ -64,7 +64,8 @@ The product is fully defined when `python3 scripts/backlog_check.py --gaps` prin
 - `docs/product.md` describes the product (more than the skeleton's headings and comments);
 - at least one requirement is defined;
 - no open decision, spike, or open question;
-- every requirement that is not superseded is covered by ready or done tickets;
+- no draft story or task;
+- every requirement that is not superseded and not in a deferred epic is covered: cited by a story or task that is not deferred;
 - no `(observed in code)` requirement left unconfirmed;
 - every ready ticket is refined;
 - every product code file is inside some epic's `code:` globs (while no epic declares `code:`, existing code is one gap in all).
