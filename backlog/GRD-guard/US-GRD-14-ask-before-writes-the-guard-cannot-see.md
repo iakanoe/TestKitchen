@@ -3,26 +3,27 @@ id: US-GRD-14
 type: story
 title: Ask before writes the guard cannot see
 epic: EP-GRD
-source_reqs: [GRD-R29, GRD-R30]
+source_reqs: [GRD-R33]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: draft
+status: ready
+refined: 2026-11-26
 ---
 
-As a project owner, I want the guard to ask before commands whose targets it cannot read and before the decision log is deleted or truncated, so that these mistakes reach a person.
+As a project owner, I want the guard to ask before commands whose targets it cannot read, so that a patch or a hard reset that changes protected files reaches a person.
 
 ## Acceptance criteria
 
-- AC1: Given a project with protected files, when a call runs `git apply`, `patch`, or `git reset --hard`, then the guard asks.
-- AC2: Given a shell command that deletes `docs/decision-log.md`, when the guard checks it, then it asks.
-- AC3: Given a shell command that truncates `docs/decision-log.md` (such as a `>` redirect to it), when the guard checks it, then it asks.
-- AC4: Given a shell command that appends to `docs/decision-log.md` with `>>`, or an edit of it, when the guard checks it, then the guard allows it.
+- AC1: Given any project, with or without a `kitchen.lock`, when a call runs `git apply <patch>`, `patch` (such as `patch -p1 < fix.diff`), or `git reset --hard`, then the guard asks.
+- AC2: Given `git apply` with `--check`, `--stat`, or `--numstat` and without `--apply`, or `patch --dry-run`, when the guard checks it, then this rule does not ask; with `--apply` added (`git apply --stat --apply fix.diff`), it asks.
 
 ## Notes
 
-Implements DEC-GRD-04, option (a), decided 2026-11-25 by Ianick Noejovich (its first two parts; US-GRD-15 holds the third). It changes the behavior recorded by US-GRD-08 (protected edits) and US-GRD-09 (shell writes), which stay as the record of the earlier behavior.
+- Implements DEC-GRD-04, option (a), decided 2026-11-25 by Ianick Noejovich (its first part), as made exact on 2026-11-26 (GRD-R33 supersedes GRD-R29: every project, and the forms that do not write stay allowed). US-GRD-16 holds the decision-log part and US-GRD-15 the branch-protection part. It changes the behavior recorded by US-GRD-09, which stays as the record of the earlier behavior.
+- Git's documentation marks `--check`, `--stat`, and `--numstat` (and `--summary`) as "Turns off apply", and says `--apply` given after them also applies the patch: https://git-scm.com/docs/git-apply, checked 2026-11-26. `--summary` is not among the decided forms, so it asks.
+- Replaces no criterion: US-GRD-09's Notes, not its criteria, put `git apply` and `patch` out of reach.
 
 ## Open questions
 
-- None.
+- None. The decision log records this decision, and the decisions of 2026-11-26 settled which projects and which forms.

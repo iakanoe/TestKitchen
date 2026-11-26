@@ -42,4 +42,4 @@ No ticket waits on it. Any change becomes a new story under EP-INST; US-INST-16 
 - Date: 2026-11-25.
 - Answer: Option (a): `kitchen.yml` stays untouched; an `update --host <new host>` that changes the host prints that `host:` in `kitchen.yml` must be set to the new host, and `doctor`'s host-mismatch fix offers both directions (set `host:` in `kitchen.yml` to the installed host, or run `update --host <other host>`).
 - Decided by: Ianick Noejovich.
-- Recorded in: requirements INST-R30, INST-R31; confirmed INST-R20, INST-R25; US-INST-25; decision log, "Host switch on update tells the person to set kitchen.yml's host".
+- Recorded in: requirements INST-R30, INST-R31; confirmed INST-R20, INST-R25; US-INST-25; decision log, "Host switch on update tells the person to set kitchen.yml's host". Made exact 2026-11-26: INST-R37 supersedes INST-R30 (decision log, "Refinement widens ten requirements of the adopt decisions").

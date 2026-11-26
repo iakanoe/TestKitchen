@@ -38,4 +38,4 @@ Proposal, not decided: reject a leading `/` with a message like the backslash on
 - Date: 2026-11-25.
 - Answer: Option (a): a glob with a leading `/` is rejected with a message like the backslash one.
 - Decided by: Ianick Noejovich.
-- Recorded in: requirements CONF-R27; confirmed CONF-R11, CONF-R12; US-CONF-17; decision log, "Globs never start with a slash".
+- Recorded in: requirements CONF-R27; confirmed CONF-R11, CONF-R12; US-CONF-17; decision log, "Globs never start with a slash". Widened 2026-11-26: CONF-R28 supersedes CONF-R27 (decision log, "Refinement widens ten requirements of the adopt decisions").
