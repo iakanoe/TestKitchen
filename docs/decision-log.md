@@ -2,6 +2,14 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — US-CONF-16: a kitchen.yml that is not UTF-8
+
+- Decision: `load_config` reads `kitchen.yml` in its own `try` and turns a `UnicodeDecodeError` into `ConfigError("kitchen.yml: not valid UTF-8")`; YAML errors keep their separate handling. The existing callers already print a `ConfigError` as `ERROR` lines and exit 1, so `--config` and `backlog_check.py` needed no change. The docstring now lists the failure modes. Delivers US-CONF-16 (CONF-R26, DEC-CONF-01).
+- Why: catching only around the read keeps an encoding problem from being reported as a YAML one.
+- Decided by: the delivering agent, within US-CONF-16's criteria.
+- Recorded in: `template/scripts/kitchen_lib.py`, `tests/test_conf_utf8.py`; this repository's installed copy refreshed through `init.py update`.
+- Review suggestion noted, not taken: `raise … from None` on the new raise (cosmetic; callers catch the error).
+
 ### 2026-11-26 — TASK-INST-03: terminal wording
 
 - Decision: `AGENT-INSTALL.md` now says the agent's shell may have no terminal, tells it to always pass `--yes`, and says that without `--yes` the installer stops before writing only when there is no terminal (and asks on one when there is), keeping the exit-code-2 clause for a missing answer. `guide/install.md`, "Answering without a terminal", now reads "(CI; an agent's shell may have none)"; its existing sentence already limits the stop to "without a terminal and without `--yes`". Delivers TASK-INST-03 (DEC-INST-03, option (a), as widened on 2026-11-26).
