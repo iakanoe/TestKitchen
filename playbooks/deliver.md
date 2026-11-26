@@ -203,6 +203,7 @@ Nothing found may stay only in chat.
 - **Decisions.** Add one entry at the top of `docs/decision-log.md` (`### YYYY-MM-DD — <title>`), shaped like the entries already there. It records who confirmed what, every built behavior the ticket left open, the new user-visible texts, the test changes, and the filed gaps.
 - **Platform changes.** Any setting changed outside the code (host settings, secrets by name only, external services) gets its own decision-log entry.
 - **READMEs.** Update any status or capability list the project keeps when a capability ships.
+- **Replaced criteria.** If the ticket lists `replaces:`, turn each criterion it names into `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)` in its `done` ticket, in this change request: the date is today's, `<ID>` is this ticket, and only that criterion's line changes (its number and place stay; nothing else in the done ticket is touched). This is the one edit a `done` ticket allows, and the one exception to asking before editing a ticket's criteria: the person approved it when the ticket's `replaces:` was written. Once this ticket is `done`, `backlog_check.py` refuses any replaced criterion still live.
 - **Status.** Set the ticket to `done`. If a live criterion can't be proven in this ticket, stop and ask (the ticket would merge `in-progress`, which needs the person's yes and a ticket that holds the rest).
 - **Check.** Run `python3 scripts/backlog_check.py`. It must exit 0.
 

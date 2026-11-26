@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-DLV-02: crossing out at capture
+
+- Decision: `template/playbooks/deliver.md`, step 10 (Capture), gains a "Replaced criteria" bullet before "Status": when the ticket lists `replaces:`, each named criterion becomes `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)` in its done ticket within the same change request (today's date, this ticket's ID, only that line changes), stated as the one edit a done ticket allows and the one exception to asking before editing criteria, since the person approved it when `replaces:` was written. It names `backlog_check.py`'s existing check; `gate pr`'s check is US-DLV-41's and is not described before it exists. Delivers TASK-DLV-02 (DEC-DEF-04).
+- Why: the plan review asked for the exception to be explicit and the edit to be exact.
+- Decided by: the delivering agent, within TASK-DLV-02's criterion.
+- Recorded in: the playbook; this repository's installed copy refreshed through `init.py update`.
+
 ### 2026-11-26 — TASK-DEF-04: replaces in the playbook and README
 
 - Decision: `template/playbooks/define.md` gains a Checkpoints bullet "Contradicting a done criterion" (warn, show the criterion, list it under `replaces:` on a yes; without the yes, a DEC), and each of its three "never rewritten" places (Applying a decision, Checkpoints, `change` step 4) names the one allowed edit, crossing out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)` when the replacing ticket is delivered. `template/backlog/README.md` documents `replaces:` in its frontmatter example and field list next to `fixes:`, and its "never rewritten" rule names the same edit. Delivers TASK-DEF-04 (DEC-DEF-04).
