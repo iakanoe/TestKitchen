@@ -107,7 +107,7 @@ Several small sub-questions go in one table of at most five rows, answered with 
 After each answer, apply it everywhere in one pass, in this order:
 
 1. The requirement text in `docs/requirements/` (a new ID, a wording fix, or a superseded line plus a new ID), or an ADR for an architecture choice.
-2. The affected criteria and tickets: removed criteria stay as placeholders (`- AC4: (removed YYYY-MM-DD, DEC-PAY-02)`), new criteria take the next numbers, new requirements get new tickets. A `done` ticket is never rewritten: its change is a new ticket.
+2. The affected criteria and tickets: removed criteria stay as placeholders (`- AC4: (removed YYYY-MM-DD, DEC-PAY-02)`), new criteria take the next numbers, new requirements get new tickets. A `done` ticket is never rewritten: its change is a new ticket. The one allowed edit comes later: when a ticket that lists one of its criteria under `replaces:` is delivered, that criterion is crossed out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`.
 3. The epic's `## Open` line: remove the DEC.
 4. The DEC: add `## Outcome` (the date, the answer, who decided, where it is recorded) and set `status: done` (or `deferred`).
 5. The tickets it unblocks: remove it from `blocked_by`, and update every open question that named it.
@@ -136,7 +136,8 @@ Change requests cite entries by title (`Log: <title>`), so never rename a title.
 - At the end of each topic (a layer, an epic's requirements, a decision, a batch of tickets), show exactly what you will write: each file, each section, and the text. Write only after a yes. A yes covers what was shown; the next topic needs its own.
 - **Requirements are always written** at their checkpoint, on the yes: what the person confirmed never stays only in chat.
 - **Stories and tasks are always proposed,** and written only on a yes. A no leaves their requirements uncovered, which `--gaps` keeps listing.
-- **Done tickets are never rewritten.** A change to done behavior becomes a new ticket, because the done ticket is the record of what was built and tested.
+- **Done tickets are never rewritten.** A change to done behavior becomes a new ticket, because the done ticket is the record of what was built and tested. The one allowed edit: when the new ticket is delivered, each criterion it lists under `replaces:` is crossed out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`, so the old line stays visible as history.
+- **Contradicting a done criterion.** When a new definition contradicts a live criterion of a `done` ticket, adopted or not, warn the person and show that criterion before writing anything. On a yes, the new ticket lists it under `replaces: [<ticket>/AC<n>]`; without the yes, nothing is written and the contradiction is a DEC.
 - **Readiness needs an owner.** The checkpoint that proposes `ready` asks who owns each ticket.
 - After writing, run `python3 scripts/backlog_check.py` (it must exit 0) and report what changed.
 
@@ -167,7 +168,7 @@ Change requests cite entries by title (`Log: <title>`), so never rename a title.
 1. Restate the change in one sentence, and confirm it.
 2. Find what it touches: the `docs/product.md` sections, the requirements (search their IDs and text), the ADRs, the DECs, and the tickets with their status.
 3. Ask a question round about what the change leaves open.
-4. Checkpoint: propose the new or superseded requirements, any ADR or DEC, and the ticket changes. Tickets that aren't done get criteria removed as placeholders and new ones appended; done tickets stay as they are and the change becomes a new ticket; tickets citing a superseded requirement are updated.
+4. Checkpoint: propose the new or superseded requirements, any ADR or DEC, and the ticket changes. Tickets that aren't done get criteria removed as placeholders and new ones appended; done tickets stay as they are and the change becomes a new ticket, which lists each criterion it contradicts under `replaces:` after the person's yes (the criterion is crossed out when that ticket is delivered); tickets citing a superseded requirement are updated.
 5. Apply on the yes, log the decision, run `backlog_check.py`, and `refine` the tickets you changed.
 
 ### sweep

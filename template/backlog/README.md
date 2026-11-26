@@ -56,6 +56,7 @@ refined: 2026-01-31      # set by /define refine when the ticket passes refineme
 adopted: true            # optional: written by adopt mode for behavior that already existed
 hotfix: true             # optional: urgent-fix lane
 fixes: [US-PAY-01/AC2]   # optional: bug-fix stories name the criterion the code broke
+replaces: [US-PAY-02/AC1]   # optional: criteria of done tickets this ticket's definition contradicts
 code: ["src/payments/**"]   # epics only, optional: code areas this epic owns
 ---
 ```
@@ -69,6 +70,7 @@ code: ["src/payments/**"]   # epics only, optional: code areas this epic owns
 - `adopted: true` marks behavior that existed before the backlog did (`playbooks/define.md`, mode `adopt`). Its missing tests are test debt, reported by `backlog_check.py --test-debt` and never errors.
 - `hotfix: true` marks the urgent-fix lane: it skips the plan review and the questions round, and the change request must log why the lane was used and name the follow-up ticket.
 - `fixes` names the criterion a bug broke. The fix story's first test reproduces the bug.
+- `replaces` names criteria of `done` tickets that this ticket's definition contradicts (`playbooks/define.md` warns and asks before listing one). When this ticket is delivered, each one is crossed out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`; once this ticket is `done`, `backlog_check.py` refuses any replaced criterion that is still live.
 - `code` (epics only) lists the globs of the code the epic owns. Once any epic declares `code`, code files no epic claims are reported as definition gaps.
 
 ### Readiness
@@ -136,7 +138,7 @@ A bare gap blocks readiness until it is filed as a `DEC` or `SPK`, so whoever bu
 - Every requirement that is not superseded is cited by at least one story or task that is not deferred. `backlog_check.py` warns about uncovered requirements (errors with `--strict`); epics with `status: deferred` are excluded.
 - Proposals, candidate designs, and recalled claims never become criteria. Put them in Notes with their certainty.
 - When a `DEC` is decided, the answer goes into `docs/` (a requirement or an ADR) and the decision log; then the DEC is `done`. New open questions become tickets.
-- A `done` ticket is never rewritten. A change to done behavior is a new ticket, because the done ticket is the record of what was built and tested.
+- A `done` ticket is never rewritten. A change to done behavior is a new ticket, because the done ticket is the record of what was built and tested. The one allowed edit: crossing out a criterion that a delivered ticket lists under `replaces:`, as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`.
 - Never record credentials, tokens, or secrets in a ticket.
 
 ### Self-contained tickets
