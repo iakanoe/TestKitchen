@@ -7,7 +7,7 @@ The installer is `init.py`. Pinned copy:
 - one line: `curl -fsSL https://raw.githubusercontent.com/iakanoe/TestKitchen/v0.1.0/init.py | python3 - <mode and flags>`
 - or a clone: `git clone --branch v0.1.0 https://github.com/iakanoe/TestKitchen.git <temp dir>` and then `python3 <temp dir>/init.py <mode and flags>`
 
-Your shell has no terminal for the installer to ask on, so always pass `--yes` for a real run; without it the installer stops before writing anything. A missing answer stops it too (exit code 2), and it says which flag to pass.
+Your shell may have no terminal for the installer to ask on, so always pass `--yes` for a real run. Without `--yes`, the installer stops before writing anything when there is no terminal to ask on (and asks on the terminal when there is one). A missing answer stops it too (exit code 2), and it says which flag to pass.
 
 ## 1. Check the folder and the prerequisites
 
