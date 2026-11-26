@@ -2,6 +2,14 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — US-DEF-33: how backlog_check reads replaces
+
+- Decision: `backlog_check.py` checks each `replaces:` entry in order: its form (a `<ticket>/AC<n>` reference), then that the criterion exists (a `(removed …)` placeholder exists, so it is no broken reference), then that its ticket is `done` (also for a placeholder, since the field only ever names done tickets), and, only once the replacing ticket is `done`, that the criterion is crossed out. Messages: "replaces `<entry>` is not a criterion reference", "… names a criterion that does not exist", "… names a criterion of a `<status>` ticket: only criteria of done tickets are replaced", and "replaces `<entry>`, which is still live: cross it out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`"; a value that is not a list gets the existing "`replaces` is a list" message only. Delivers US-DEF-33 (DEF-R45, DEC-DEF-04).
+- Why: the order gives one precise message per entry; the done-only rule keeps an open replacing ticket from failing while the old behavior is still the code's.
+- Decided by: the delivering agent, within US-DEF-33's criteria; not a person's choice beyond DEC-DEF-04.
+- Recorded in: `template/scripts/backlog_check.py` (`_replaces`), `tests/test_def_replaces.py`.
+- Gap filed: `deliver.py context` does not list `replaces:` targets among related tickets (noted on US-DLV-41). Review suggestion noted, not taken: a no-op line keeping two imports used in `tests/test_def_replaces.py`.
+
 ### 2026-11-26 — The adopt fix tickets are refined and ready
 
 - Decision: The 24 tickets of the adopt fixes are refined after two fresh-context reviews and set to `ready` with `refined: 2026-11-26`. The owner approved eight precision fixes: US-DEF-33 names the replacing ticket as the one that must be `done` and treats a `replaces:` entry naming a removed criterion as valid; US-DLV-41/AC1 states the exact `PASS pr: <ID>` output and that `<ID>` is the delivered ticket's; US-DLV-38 gains a criterion that the verdict follows `--head` for a ticket present at only one revision; TASK-INST-03 splits its criteria so each claim stands alone; US-GRD-11 names the shells and command substitution; US-GRD-15 notes that US-GRD-06/AC5's "branches" is GitLab's `/repository/branches` and gains a criterion that every spelling of the listed addresses counts; US-GRD-16, US-DLV-39, and US-DLV-40 wait on US-DEF-33 (`blocked_by`) so the `replaces:` field exists first.
