@@ -24,6 +24,8 @@ As a reviewer or CI job, I want `gate pr` to refuse a change request that delive
 - Blocked by US-DEF-33 because `backlog_check.py` must accept the `replaces:` field before a ticket can carry it.
 - A tag of a removed criterion is an error (DEF-R13), so a change request that crosses a criterion out also changes the tests tagged with it, and names them under Test changes (DLV-R18).
 
+- Gap found while planning US-DEF-33 (2026-11-26): `deliver.py context` lists the tickets named in `fixes:` among the related tickets but not those named in `replaces:`; this ticket, which teaches delivery about `replaces:`, is where that closes.
+
 ## Open questions
 
 - None. The decision log records this decision.

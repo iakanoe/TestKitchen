@@ -7,7 +7,7 @@ source_reqs: [DEF-R45]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: ready
+status: in-progress
 refined: 2026-11-26
 ---
 
