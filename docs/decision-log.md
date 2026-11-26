@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — Fresh context per ticket under /deliver all
+
+- Decision: `/deliver all` delivers each ticket in a fresh context where the agent can start one (DLV-R52); in Claude Code, a subagent per ticket that commits, pushes, and hands its questions back to the main session, which asks them, since `AskUserQuestion` is not available inside subagents (DLV-R53); the `/deliver` and `/define` skills read the playbooks and rule files one file per call (DLV-R54). Advice on lean sessions waits for a measurement (SPK-DLV-01). Reviews and what agents read stay unchanged.
+- Why: measured on the US-DLV-38 run (about 2.37M effective tokens; the context reached 254k tokens on one ticket), the context carried from one ticket into the next is the largest cost that can be removed without reducing what agents read. Trimming the playbooks would save about 4% and shortening script output about 2%, each at a cost to reliability; merging or skipping reviews would break the product's promise of fresh-context review of the plan, the tests, and the diff.
+- Decided by: Ianick Noejovich.
+- Recorded in: DLV-R52, DLV-R53, DLV-R54; US-DLV-42 (blocked by SPK-DLV-02, whether the guard covers the reviewer a ticket's subagent starts); SPK-DLV-01.
+
 ### 2026-11-26 — US-DLV-38: gate pr reads kitchen.lock at --head too
 
 - Decision: `deliver.py gate pr` resolves `--head` and judges everything through a view of the repository read at that revision (`Project.at`): the ticket files (`Backlog(root, cfg, rev)`, committed files only, read in one `git cat-file --batch` call through the new `kitchen_lib.blobs_at`), `kitchen.yml` (`load_config(root, rev)`), and `kitchen.lock` (`framework_files(root, rev)`). `Project` now loads the configuration on first use, so `gate pr` never reads the checkout's `kitchen.yml`: a missing or invalid one there changes nothing. A `kitchen.yml` missing at `--head` prints `FAIL kitchen.yml: not found at <sha>` (exit 1). `gate merge` is unchanged; its comment now says its own backlog and description checks read the checkout. Delivers US-DLV-38 (DLV-R48; "gate pr reads tickets and kitchen.yml at --head").
