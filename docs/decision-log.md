@@ -2,6 +2,41 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — The adopt fix tickets are refined and ready
+
+- Decision: The 24 tickets of the adopt fixes are refined after two fresh-context reviews and set to `ready` with `refined: 2026-11-26`. The owner approved eight precision fixes: US-DEF-33 names the replacing ticket as the one that must be `done` and treats a `replaces:` entry naming a removed criterion as valid; US-DLV-41/AC1 states the exact `PASS pr: <ID>` output and that `<ID>` is the delivered ticket's; US-DLV-38 gains a criterion that the verdict follows `--head` for a ticket present at only one revision; TASK-INST-03 splits its criteria so each claim stands alone; US-GRD-11 names the shells and command substitution; US-GRD-15 notes that US-GRD-06/AC5's "branches" is GitLab's `/repository/branches` and gains a criterion that every spelling of the listed addresses counts; US-GRD-16, US-DLV-39, and US-DLV-40 wait on US-DEF-33 (`blocked_by`) so the `replaces:` field exists first.
+- Why: Two independent reviews found criteria that a reviewer could read two ways or that left a case open; each fix makes the criterion observable, and the blocker order keeps the tickets that replace criteria from being delivered before the checker accepts `replaces:`.
+- Decided by: Ianick Noejovich.
+- Recorded in: the tickets.
+
+### 2026-11-26 — A new definition retires a done ticket's criterion through replaces
+
+- Decision: When a new definition contradicts a criterion of a `done` ticket (adopted or not), `/define` warns the person and shows the affected criterion; on a yes, the new ticket records it in a `replaces: [<ticket>/AC<n>]` frontmatter list (like `fixes:`); when that new ticket is delivered, the replaced criterion becomes `- AC<n>: (removed YYYY-MM-DD, replaced by <ticket>)` in the done ticket (the one allowed edit of a done ticket), and the checker refuses a done ticket whose `replaces:` criteria are still live. Until `backlog_check.py` accepts the field, the tickets that replace criteria list them in their Notes ("Replaces (to become a `replaces:` field once US-DEF-33 is delivered)"): US-DLV-39 (US-DLV-21/AC1, AC3, AC4), US-DLV-40 (US-DLV-04/AC2, AC3, AC4), and US-GRD-16 (US-GRD-08/AC3, US-GRD-09/AC6). Closes DEC-DEF-04.
+- Why: A done ticket is never rewritten, so without this the backlog keeps two live criteria that disagree, and nothing says which one binds.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements DEF-R45, DEF-R46, DLV-R51; DEC-DEF-04; US-DEF-33, TASK-DEF-04, US-DLV-41, TASK-DLV-02.
+
+### 2026-11-26 — Review-only stories become tasks
+
+- Decision: The three documentation-only stories become tasks with new IDs: US-DEF-31 becomes TASK-DEF-02, US-DEF-32 becomes TASK-DEF-03, and US-INST-26 becomes TASK-INST-03; the old IDs are retired, never reused. Their criteria are checkable statements, and the final review verifies them. DEC-DEF-05 asks how such criteria should be accepted from now on.
+- Why: A done story needs a tagged test for every live criterion (DEF-R14), and no test can check the wording of a playbook, a guide, or an instruction file; an untestable task is confirmed by the final reviewer instead (DLV-R37).
+- Decided by: Ianick Noejovich.
+- Recorded in: TASK-DEF-02, TASK-DEF-03, TASK-INST-03; DEC-DEF-02, DEC-DEF-03, DEC-INST-03 (their outcomes); DEC-DEF-05 (open). The entries "Epics stay exempt from readiness", "The playbook's Done paragraph follows --gaps", and "AGENT-INSTALL.md says the shell may have no terminal" name the old IDs.
+
+### 2026-11-26 — Refinement widens ten requirements of the adopt decisions
+
+- Decision: Refining the tickets of the 2026-11-25 decisions, the owner made ten requirements wider or exact, each superseded by a new one: CONF-R28 (a glob is refused when it starts with `/` after surrounding whitespace is trimmed and a leading `./` is removed); DEF-R43 and DEF-R44 (`guide/concepts.md` and `guide/define.md` are fixed in the same tickets, and the Done paragraph also says draft stories and tasks are gaps); GRD-R32 (a `cd` inside a shell's `-c` script or a pipeline stage also makes the folder unknown); GRD-R33 (`git apply`, `patch`, and `git reset --hard` ask in every project, while `git apply --check`, `--stat`, `--numstat`, and `patch --dry-run` stay allowed); GRD-R34 (appending to the decision log stays free through `>>`, `tee -a`, Edit, and MultiEdit, while replacing or removing it asks, a Write call included); GRD-R35 (the branch-protection writes denied are listed, as GitHub's and GitLab's documentation confirm them on 2026-11-26); INST-R35 (`guide/install.md` drops the claim that an agent's shell has no terminal); INST-R36 (a missing lock `version`, or an `options` value that is not a table, is a broken lock, and the accepted version form is `X.Y.Z` with an optional leading `v`); INST-R37 (the line telling the person to set `host:` prints in the plan, on `--dry-run` too, and after a real run). US-GRD-14 is split: the decision-log part becomes US-GRD-16. US-HOST-13 gets an open question naming SPK-HOST-01: until it runs, empty output from a list command counts as no open change requests. It widens, and does not replace, the entries "Globs never start with a slash", "Epics stay exempt from readiness", "The playbook's Done paragraph follows --gaps", "The guard treats the folder as unknown after cd -, popd, or a subshell cd", "The guard asks before writes it cannot see", "AGENT-INSTALL.md says the shell may have no terminal", "A lock version that is not a number is a broken lock", and "Host switch on update tells the person to set kitchen.yml's host".
+- Why: The ticket review found cases the 2026-11-25 wording left open (whitespace and `./` before a slash, other folder changes, which writes append and which replace, which endpoints protect a branch, other broken lock fields, the guides that repeat the same text), and each answer fails toward the stricter or clearer reading.
+- Decided by: Ianick Noejovich.
+- Recorded in: requirements CONF-R28, DEF-R43, DEF-R44, GRD-R32, GRD-R33, GRD-R34, GRD-R35, INST-R35, INST-R36, INST-R37; superseded CONF-R27, DEF-R41, DEF-R42, GRD-R26, GRD-R29, GRD-R30, GRD-R31, INST-R33, INST-R34, INST-R30; US-CONF-17, TASK-DEF-02, TASK-DEF-03, US-GRD-11, US-GRD-14, US-GRD-15, US-GRD-16, US-HOST-13, TASK-INST-03, US-INST-25, US-INST-27; the outcomes of DEC-CONF-02, DEC-DEF-02, DEC-DEF-03, DEC-GRD-01, DEC-GRD-04, DEC-INST-01, DEC-INST-03, DEC-INST-04.
+
+### 2026-11-26 — New tickets leave out criteria that are already true
+
+- Decision: A new ticket's criteria state only what changes. A criterion that restates behavior already true today (other checks unchanged, GET reads stay allowed, a full sha still builds the command) is left out, and a Notes line names the existing criterion that holds it. Draft tickets were never referenced by tests, so their criteria are renumbered from AC1. When a new ticket replaces a criterion of a done ticket, it keeps the part of that criterion that stays true, since that part would otherwise lose its criterion once the old one is crossed out.
+- Why: A criterion that is already true passes before any code changes, so it proves nothing about the change and duplicates a criterion that lives in another story.
+- Decided by: Ianick Noejovich.
+- Recorded in: US-CONF-17, US-DEF-30, TASK-DEF-02, US-GRD-11, US-GRD-12, US-GRD-13, US-GRD-15, US-HOST-13, US-HOST-14, US-INST-25, US-INST-27.
+
 ### 2026-11-25 — The guard asks before writes it cannot see
 
 - Decision: Option (a): `git apply`, `patch`, and `git reset --hard` ask whenever the project has protected files; deleting or truncating `docs/decision-log.md` asks while appending stays free; branch-protection API writes are denied. Closes DEC-GRD-04.

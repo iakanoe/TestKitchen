@@ -7,7 +7,8 @@ source_reqs: [CONF-R26]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: draft
+status: ready
+refined: 2026-11-26
 ---
 
 As a project maintainer, I want a `kitchen.yml` saved in another encoding reported as a configuration error, so that I see what to fix instead of a traceback.
@@ -19,8 +20,10 @@ As a project maintainer, I want a `kitchen.yml` saved in another encoding report
 
 ## Notes
 
-Implements DEC-CONF-01, option (a), decided 2026-11-25 by Ianick Noejovich. It changes the behavior recorded by US-CONF-01, which stays as the record of the earlier behavior.
+- Implements DEC-CONF-01, option (a), decided 2026-11-25 by Ianick Noejovich. It changes the behavior recorded by US-CONF-01, which stays as the record of the earlier behavior.
+- AC2 is the encoding case of what US-CONF-14/AC4 (`--config` prints each problem as an `ERROR` line and exits 1) and US-DEF-12/AC2 (`backlog_check.py` prints a `kitchen.yml` problem as an `ERROR kitchen.yml:` line and exits 1) record for other invalid files; today this file ends in a traceback instead.
+- Replaces no criterion: no criterion of US-CONF-01 covers the file's encoding.
 
 ## Open questions
 
-- None.
+- None. The decision log records this decision.

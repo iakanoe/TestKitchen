@@ -43,4 +43,4 @@ US-GRD-08 and US-GRD-09 (protected edits and shell writes); a change would be a 
 - Date: 2026-11-25.
 - Answer: Option (a): `git apply`, `patch`, and `git reset --hard` ask whenever the project has protected files; deleting or truncating `docs/decision-log.md` asks while appending stays free; branch-protection API writes are denied.
 - Decided by: Ianick Noejovich.
-- Recorded in: requirements GRD-R29, GRD-R30, GRD-R31; superseded GRD-R20 (by GRD-R30); confirmed GRD-R22; US-GRD-14, US-GRD-15; decision log, "The guard asks before writes it cannot see". It narrows "The guard does not ask before decision-log edits": appending and edits stay free.
+- Recorded in: requirements GRD-R29, GRD-R30, GRD-R31; superseded GRD-R20 (by GRD-R30); confirmed GRD-R22; US-GRD-14, US-GRD-15; decision log, "The guard asks before writes it cannot see". It narrows "The guard does not ask before decision-log edits": appending and edits stay free. Made exact 2026-11-26: GRD-R33, GRD-R34, and GRD-R35 supersede GRD-R29, GRD-R30, and GRD-R31, and US-GRD-14 was split, its decision-log part becoming US-GRD-16 (decision log, "Refinement widens ten requirements of the adopt decisions").

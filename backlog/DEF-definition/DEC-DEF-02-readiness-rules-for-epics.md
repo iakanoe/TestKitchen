@@ -40,4 +40,4 @@ The DEF-R09 wording (confirm or supersede), and either a fix story or a README w
 - Date: 2026-11-25.
 - Answer: Option (b): epics stay exempt from the readiness rules, and `backlog/README.md`, "Readiness", says that it applies to tickets other than epics.
 - Decided by: Ianick Noejovich.
-- Recorded in: requirements DEF-R41; confirmed DEF-R09; US-DEF-31; decision log, "Epics stay exempt from readiness".
+- Recorded in: requirements DEF-R41; confirmed DEF-R09; US-DEF-31, now TASK-DEF-02 (decision log, "Review-only stories become tasks"); decision log, "Epics stay exempt from readiness". Widened 2026-11-26: DEF-R43 supersedes DEF-R41 (decision log, "Refinement widens ten requirements of the adopt decisions").

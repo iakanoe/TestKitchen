@@ -41,4 +41,4 @@ No ticket waits on it. US-INST-24 records the instructions as they are; a wordin
 - Date: 2026-11-25.
 - Answer: Option (a): `AGENT-INSTALL.md` is reworded to "Your shell may have no terminal …; always pass `--yes`".
 - Decided by: Ianick Noejovich.
-- Recorded in: requirements INST-R33; confirmed INST-R07, INST-R29; US-INST-26; decision log, "AGENT-INSTALL.md says the shell may have no terminal".
+- Recorded in: requirements INST-R33; confirmed INST-R07, INST-R29; US-INST-26, now TASK-INST-03 (decision log, "Review-only stories become tasks"); decision log, "AGENT-INSTALL.md says the shell may have no terminal". Widened 2026-11-26: INST-R35 supersedes INST-R33 (decision log, "Refinement widens ten requirements of the adopt decisions").
