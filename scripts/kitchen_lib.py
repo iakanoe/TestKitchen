@@ -257,8 +257,20 @@ def _globs(data, key, errors, required):
     bad = [g for g in v if "\\" in g]
     if bad:
         errors.append(f"`{key}` globs use `/` between folders, never a backslash: {bad!r}")
-        return []
+    # Paths are relative to the repository root, so a glob starting with `/` would also
+    # silently match nothing. It is judged after trimming and removing one leading `./`,
+    # the same normalization matching applies, and listed as written (CONF-R28, US-CONF-17).
+    rooted = [g for g in v if _without_dot_slash(g.strip()).startswith("/")]
+    if rooted:
+        errors.append(f"`{key}` globs are relative to the repository root and never start with `/`: {rooted!r}")
+    if bad or rooted:
+        return []  # every problem is reported at once (CONF-R05), so both checks run first
     return [g.strip() for g in v]
+
+
+def _without_dot_slash(glob):
+    """`glob` without one leading `./`."""
+    return glob[2:] if glob.startswith("./") else glob
 
 
 def _text(data, key, errors, required=False):
