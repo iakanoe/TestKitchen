@@ -10,7 +10,9 @@ checks them against the conventions in `backlog/README.md`:
   targets; no `blocked_by` cycles; release slices (when `releases` is set) in order with
   their blockers; criteria in the `- AC<n>: …` form, numbered upwards; every `…/AC<n>`
   reference naming a live criterion; readiness (owner, answered open questions, a live
-  criterion, a release); a `done` ticket has no unfinished blocker;
+  criterion, a release); a `done` ticket has no unfinished blocker; `replaces:` entries
+  name existing criteria of `done` tickets, and a `done` ticket's replaced criteria are
+  crossed out as `(removed …)` placeholders;
 - trace: test tags (`[US-PAY-03/AC2]` or `us_pay_03_ac2`) name a live criterion of a
   started ticket; a `done` story has a tagged test for every live criterion (adopted
   stories report missing ones as test debt instead); every TODO/FIXME/XXX/HACK names a
@@ -54,7 +56,7 @@ PRIORITY = ("high", "normal", "low")
 REQUIRED = ("id", "type", "title", "owner", "assignee_type", "status")
 REQUIRED_NON_EPIC = ("epic", "source_reqs", "blocked_by")
 KNOWN_FIELDS = set(REQUIRED + REQUIRED_NON_EPIC) | {
-    "priority", "release", "refined", "adopted", "hotfix", "fixes", "code"}
+    "priority", "release", "refined", "adopted", "hotfix", "fixes", "replaces", "code"}
 # Kinds of ticket that hold acceptance criteria.
 WITH_CRITERIA = ("story", "task")
 
@@ -241,7 +243,7 @@ class Backlog:
         for key in ("adopted", "hotfix"):
             if key in fm and not isinstance(fm[key], bool):
                 self.error(rel, f"`{key}` is true or false")
-        for key in ("source_reqs", "blocked_by", "fixes", "code"):
+        for key in ("source_reqs", "blocked_by", "fixes", "replaces", "code"):
             if key in fm and not isinstance(fm[key], list):
                 self.error(rel, f"`{key}` is a list (use [] for none)")
         if "code" in fm and ttype != "epic":
@@ -317,6 +319,7 @@ class Backlog:
                     self.error(rel, f"fixes `{ref}` is not a criterion reference (`US-PAY-01/AC2`)")
                 elif not self.is_live(m.group(1), int(m.group(2))):
                     self.error(rel, f"fixes `{ref}` is not a live acceptance criterion")
+            self._replaces(t)
             self._release_rules(t, releases)
             for m in kl.AC_REF.finditer(t.body):
                 if not self.is_live(m.group(1), int(m.group(2))):
@@ -324,6 +327,34 @@ class Backlog:
             if t.type != "epic" and t.status in STARTED:
                 self._readiness(t)
         self._cycles()
+
+    def _replaces(self, t):
+        """`replaces:` (DEF-R45; US-DEF-33, decided in DEC-DEF-04).
+
+        A ticket whose definition contradicts a criterion of a `done` ticket lists it here;
+        when the replacing ticket is delivered, the old criterion is crossed out as
+        `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`, the one allowed edit of a done
+        ticket. Each entry is checked in order: its form, then that the criterion exists
+        (a crossed-out placeholder still exists, so it is no broken reference, US-DEF-33/AC3),
+        then that its ticket is `done` (the field only ever names done tickets, so this holds
+        for a placeholder too). Only once the replacing ticket itself is `done` must every
+        entry be crossed out (US-DEF-33/AC4, AC5): while it is open, the old criterion
+        still describes what the code does.
+        """
+        for ref in t.list("replaces"):
+            m = kl.AC_REF.fullmatch(ref)
+            if not m:
+                self.error(t.rel, f"replaces `{ref}` is not a criterion reference (`US-PAY-01/AC2`)")
+                continue
+            target, n = self.tickets.get(m.group(1)), int(m.group(2))
+            if not target or n not in target.criteria:
+                self.error(t.rel, f"replaces `{ref}` names a criterion that does not exist")
+            elif target.status != "done":
+                self.error(t.rel, f"replaces `{ref}` names a criterion of a `{target.status}` ticket: "
+                                  "only criteria of done tickets are replaced")
+            elif t.status == "done" and target.criteria[n]:
+                self.error(t.rel, f"replaces `{ref}`, which is still live: cross it out as "
+                                  f"`- AC{n}: (removed YYYY-MM-DD, replaced by {t.id})`")
 
     def is_live(self, tid, n):
         t = self.tickets.get(tid)
