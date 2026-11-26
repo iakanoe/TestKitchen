@@ -134,19 +134,38 @@ class Backlog:
 
     `errors` and `warnings` hold (where, message) pairs; `tagged` maps a ticket ID to the
     criterion numbers its test tags name; `debt` lists adopted done stories' untested criteria.
+
+    Without `rev`, the working tree is read (untracked files included). With `rev`, only
+    what is committed at that revision, read through git in one call: `deliver.py gate pr`
+    judges exactly the revision `--head` names, whatever is checked out (DLV-R48).
     """
 
-    def __init__(self, root, cfg):
+    def __init__(self, root, cfg, rev=None):
         self.root, self.cfg = Path(root), cfg
         self.errors, self.warnings, self.debt = [], [], []
         self.reqs: Dict[str, Requirement] = {}
         self.tickets: Dict[str, Ticket] = {}
         self.tagged = defaultdict(set)
-        self.files = [f for f in kl.tracked_files(self.root) if not kl.is_ignored(f, cfg)]
+        self.files = [f for f in kl.tracked_files(self.root, rev) if not kl.is_ignored(f, cfg)]
+        self._blobs = None
+        if rev:
+            # Only the files the loaders below read: requirements, tickets, tests, and code.
+            wanted = [f for f in self.files if f.startswith(("docs/requirements/", "backlog/"))
+                      or kl.is_test(f, cfg) or kl.is_code(f, cfg)]
+            self._blobs = kl.blobs_at(self.root, rev, wanted)
         self._load_requirements()
         self._load_tickets()
         self._validate()
         self._trace()
+
+    def _text(self, rel):
+        """A file's text as kitchen_lib.read_text gives it, from the working tree or from `rev`."""
+        if self._blobs is None:
+            return kl.read_text(self.root / rel)
+        try:
+            return self._blobs[rel].decode("utf-8").replace("\r\n", "\n")
+        except (KeyError, UnicodeDecodeError):
+            return None
 
     def error(self, where, msg):
         self.errors.append((str(where), msg))
@@ -165,7 +184,7 @@ class Backlog:
             if not m:
                 self.error(rel, "requirement files are named `<CODE>-<name>.md` (one per epic code)")
                 continue
-            for line in kl.REQ_LINE.finditer(kl.read_text(self.root / rel) or ""):
+            for line in kl.REQ_LINE.finditer(self._text(rel) or ""):
                 rid, text = line.group(1), line.group(2)
                 if rid.rsplit("-R", 1)[0] != m.group(1):
                     self.error(rel, f"{rid} does not belong in a {m.group(1)} file")
@@ -190,7 +209,7 @@ class Backlog:
 
     def _load_tickets(self):
         for rel in self._ticket_files():
-            text = kl.read_text(self.root / rel)
+            text = self._text(rel)
             if text is None:
                 self.error(rel, "not readable as UTF-8 text")
                 continue
@@ -437,7 +456,7 @@ class Backlog:
             test, code = kl.is_test(rel, cfg), kl.is_code(rel, cfg)
             if not (test or code):
                 continue
-            text = kl.read_text(self.root / rel)
+            text = self._text(rel)
             if text is None:
                 continue  # binary file
             if kl.no_trace(text):

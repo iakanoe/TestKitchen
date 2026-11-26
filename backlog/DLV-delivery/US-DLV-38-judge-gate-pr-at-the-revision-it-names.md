@@ -7,7 +7,7 @@ source_reqs: [DLV-R48]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: ready
+status: done
 refined: 2026-11-26
 ---
 

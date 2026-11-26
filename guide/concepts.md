@@ -81,7 +81,7 @@ The scripts, not the agent, decide whether work may move on:
 | --- | --- | --- |
 | `backlog_check.py` | Tickets well formed, IDs and links resolve, readiness, tags name live criteria, done stories have tests, TODOs name tickets, no `blocked_by` cycles, coverage of requirements | Locally, in `deliver.py check`, in CI |
 | `deliver.py gate red <ID>` | Each live criterion has a tagged test that ran, and at least one failed | Before the freeze |
-| `deliver.py gate pr` | Branch and record match the ticket; a plan row per live criterion; the freeze; no lost tags; test changes listed; no skips added; the last review has `CRITICAL: 0` and nothing changed after it; the ticket is done (or the description says why not) | Locally and in CI on every change request |
+| `deliver.py gate pr` | Branch and record match the ticket; a plan row per live criterion; the freeze; no lost tags; test changes listed; no skips added; the last review has `CRITICAL: 0` and nothing changed after it; the ticket is done (or the description says why not). Everything, the ticket files and `kitchen.yml` included, is read as committed at `--head` (default `HEAD`), never from the checkout | Locally and in CI on every change request |
 | `deliver.py gate merge <n> --head=<sha>` | The host says the change request is open, ready, mergeable, up to date, at that exact commit, with a passing `check` job and no failing or pending check, and `gate pr` passes | Before every merge (the guard runs it in Claude Code) |
 | `deliver.py check` | `backlog_check.py`, the scripts' self-tests, then `check_command` or the full test run | Locally and as the CI `check` job |
 
