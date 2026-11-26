@@ -2,6 +2,16 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — US-DLV-38: gate pr reads kitchen.lock at --head too
+
+- Decision: `deliver.py gate pr` resolves `--head` and judges everything through a view of the repository read at that revision (`Project.at`): the ticket files (`Backlog(root, cfg, rev)`, committed files only, read in one `git cat-file --batch` call through the new `kitchen_lib.blobs_at`), `kitchen.yml` (`load_config(root, rev)`), and `kitchen.lock` (`framework_files(root, rev)`). `Project` now loads the configuration on first use, so `gate pr` never reads the checkout's `kitchen.yml`: a missing or invalid one there changes nothing. A `kitchen.yml` missing at `--head` prints `FAIL kitchen.yml: not found at <sha>` (exit 1). `gate merge` is unchanged; its comment now says its own backlog and description checks read the checkout. Delivers US-DLV-38 (DLV-R48; "gate pr reads tickets and kitchen.yml at --head").
+- Why `kitchen.lock` too: it decides which files are framework files, excluded from every scan and so never code or tests; read from the checkout, it would change the verdict between checkouts, which AC4 forbids. The ticket's notes name only the ticket files and `kitchen.yml`, so this is recorded here.
+- Also: `read_at` now goes through `blobs_at`, which skips the content of a non-file object (a path naming a folder) instead of losing its place in git's output.
+- Decided by: the delivering agent, within US-DLV-38's criteria.
+- Recorded in: `template/scripts/deliver.py`, `kitchen_lib.py`, `backlog_check.py`, `tests/test_dlv_gate_pr_at_head.py`, `guide/concepts.md`; this repository's installed copy refreshed through `init.py update`.
+- Review suggestion noted, not taken: `playbooks/deliver.md`, "One checkout", says "the gates read this checkout"; it stays true for `gate red`, `gate merge`, and `backlog_check.py`, and the rule it supports is unchanged.
+- Tooling note: pytest is not installed on this machine's Python; `gate red` and `check` ran with a throwaway virtualenv (pytest, PyYAML) first on PATH, as CI installs them.
+
 ### 2026-11-26 — US-DEF-30: summary counts and a frozen-test fix
 
 - Decision: `backlog_check.py` computes the uncovered requirements before the summary and adds them to the error count with `--strict` and to the warning count without it; output order and exit codes are unchanged. Delivers US-DEF-30 (DEF-R40, DEC-DEF-01).
