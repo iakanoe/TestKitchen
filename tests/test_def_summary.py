@@ -33,7 +33,9 @@ class SummaryTest(Base):
         self.assertEqual(code, 1, out)
 
     def test_us_def_30_ac1_strict_counts_it_together_with_other_errors(self):
-        broken = dict(UNCOVERED, **{"src/pay.py": "x = 1\n# TODO: later\n"})
+        # An unowned to-do marker in code is one more error; the word is assembled so this
+        # repository's own trace scan does not read it as an unowned marker here.
+        broken = dict(UNCOVERED, **{"src/pay.py": "x = 1\n# " + "TO" + "DO: later\n"})
         code, out = self.check(broken, "--strict")
         self.assertTrue(summary(out).endswith("; 2 error(s), 0 warning(s)"), out)
         self.assertEqual(len(labelled(out, "ERROR")), 2, out)
