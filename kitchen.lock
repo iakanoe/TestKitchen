@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit 0b508244d46a)",
+  "source": "local checkout (commit 7ecdbe177347)",
   "options": {
     "host": "github",
     "no_claude": false,
@@ -19,7 +19,7 @@
     "AGENTS.md": "6b69d286a79d26b9cc37c1919de3f2074d39cb144443b488e7470648789a0978",
     "CLAUDE.md": "7d057d436960178505107b36a282988ef30098e2213f72aef3fec5acfaf84c55",
     "CONTRIBUTING.md": "82e2611efc6c3fcd9594b728294efd3f7992a6c42f90ed90a39746ec5ea56b7f",
-    "backlog/README.md": "eaa32e5e2122522f9c4d2418033d84ed9080d7f538fe02c14c3a3363f05adf87",
+    "backlog/README.md": "efa40c41c404036756551940a5732072505b2cfe3d941782b96b6979907b4773",
     "docs/architecture/README.md": "2a05a1503d1ac74003122b1b8e8e4e445008d9e36d286956a504f3aa93f62076",
     "docs/decision-log.md": "a6acf2f3b2b27033e2b670c659c6a75b15a2b5888d7396a46a080e7103037bfc",
     "docs/product.md": "cadcb89e46977713ffd9f708327e170af96a819315f636baf8cf6b35341dbe1f",

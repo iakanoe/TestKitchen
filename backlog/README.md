@@ -73,7 +73,7 @@ code: ["src/payments/**"]   # epics only, optional: code areas this epic owns
 
 ### Readiness
 
-A ticket that is `ready`, `in-progress`, or `done` needs:
+A ticket other than an epic that is `ready`, `in-progress`, or `done` needs:
 
 - an owner (not `TBD`, not empty), so someone is accountable;
 - every open question answered (see "Open questions");

@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-DEF-02: readiness wording
+
+- Decision: both "Readiness" texts now begin "A ticket other than an epic …" (`template/backlog/README.md`, `guide/concepts.md`), with no added rationale, the smallest wording that meets DEF-R43. Delivers TASK-DEF-02 (DEC-DEF-02, option (b), as widened on 2026-11-26).
+- Why: the plan review advised against adding a reason neither the criterion nor the requirement asks for.
+- Decided by: the delivering agent, within TASK-DEF-02's criteria.
+- Recorded in: the two files; this repository's installed `backlog/README.md` refreshed through `init.py update`.
+
 ### 2026-11-26 — US-DEF-33: how backlog_check reads replaces
 
 - Decision: `backlog_check.py` checks each `replaces:` entry in order: its form (a `<ticket>/AC<n>` reference), then that the criterion exists (a `(removed …)` placeholder exists, so it is no broken reference), then that its ticket is `done` (also for a placeholder, since the field only ever names done tickets), and, only once the replacing ticket is `done`, that the criterion is crossed out. Messages: "replaces `<entry>` is not a criterion reference", "… names a criterion that does not exist", "… names a criterion of a `<status>` ticket: only criteria of done tickets are replaced", and "replaces `<entry>`, which is still live: cross it out as `- AC<n>: (removed YYYY-MM-DD, replaced by <ID>)`"; a value that is not a list gets the existing "`replaces` is a list" message only. Delivers US-DEF-33 (DEF-R45, DEC-DEF-04).
