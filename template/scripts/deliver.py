@@ -22,6 +22,8 @@ Output: `next` prints `NEXT`, `READY`, `WAIT`, `DECIDE`, and `REFINE` lines; gat
 each failure as `FAIL <reason>` and end with `PASS <what>` or exit 1. Usage errors exit 2.
 Without --base, `gate pr` measures from `origin/<default branch>`, or from the local default
 branch (with a NOTE) when origin does not have it. History checks include merge commits.
+`gate pr` judges the --head revision (default HEAD) as committed: its tickets, kitchen.yml,
+and kitchen.lock are read there, never from the checkout or uncommitted edits.
 
 The script encodes a few workflow conventions itself (backlog/README.md documents them):
 the freeze commit message `test: <ID> failing tests`, the reviewer's closing lines
@@ -80,17 +82,34 @@ class Stop(Exception):
 
 
 class Project:
-    """The repository the scripts belong to: root, configuration, backlog (loaded once), host."""
+    """The repository the scripts belong to: root, configuration, backlog (each loaded once), host.
 
-    def __init__(self, root=None):
+    The configuration and the backlog come from the working tree, or, for a view made by
+    `at(rev)`, from what is committed at that revision. Both load on first use, so a
+    command that judges another revision (`gate pr`) never reads the checkout's
+    kitchen.yml: a missing or broken one there cannot change its verdict (DLV-R48).
+    """
+
+    def __init__(self, root=None, rev=None):
         self.root = Path(root) if root else kl.repo_root()
-        self.cfg = kl.load_config(self.root)
+        self.rev = rev
+        self._cfg = None
         self._backlog = None
+
+    def at(self, rev):
+        """The same repository, with kitchen.yml, kitchen.lock, and the backlog read at `rev`."""
+        return Project(self.root, rev)
+
+    @property
+    def cfg(self):
+        if self._cfg is None:
+            self._cfg = kl.load_config(self.root, self.rev)
+        return self._cfg
 
     @property
     def backlog(self):
         if self._backlog is None:
-            self._backlog = bc.Backlog(self.root, self.cfg)
+            self._backlog = bc.Backlog(self.root, self.cfg, self.rev)
         return self._backlog
 
     @property
@@ -561,20 +580,8 @@ def branch_changes(p, base, head, since=None):
 
 def read_at(p, rev, paths):
     """{path: text} for files at a revision, read in one `git cat-file --batch` call."""
-    if not paths:
-        return {}
-    data = "".join(f"{rev}:{path}\n" for path in paths).encode()
-    r = subprocess.run(kl.git_argv("cat-file", "--batch"), cwd=str(p.root), input=data, capture_output=True)
-    out, i, texts = r.stdout, 0, {}
-    for path in paths:
-        nl = out.index(b"\n", i)
-        header = out[i:nl].split()
-        i = nl + 1
-        if len(header) == 3 and header[1] == b"blob":
-            size = int(header[2])
-            texts[path] = out[i:i + size].decode("utf-8", "replace").replace("\r\n", "\n")
-            i += size + 1
-    return texts
+    return {path: raw.decode("utf-8", "replace").replace("\r\n", "\n")
+            for path, raw in kl.blobs_at(p.root, rev, paths).items()}
 
 
 def tag_counts(p, rev):
@@ -660,6 +667,11 @@ def gate_pr(p, body, branch, base, head):
     ticket_text = kl.section(body, "Ticket") or ""
     tid = ticket_of(raw)
     head = p.git("rev-parse", head).strip()
+    # Judge exactly the revision --head names: tickets, kitchen.yml, and kitchen.lock are read
+    # there, like the history, the tagged tests, and the record, never from the checkout or
+    # uncommitted edits, so every checkout prints the same verdict (DLV-R48; decision log,
+    # "gate pr reads tickets and kitchen.yml at --head").
+    p = p.at(head)
     if not tid:
         # A ticket-named branch must not skip the ticket checks by leaving the ID out.
         if re.match(r"^(?:us|task)-", branch):
@@ -804,7 +816,8 @@ def gate_merge(p, number, head):
     failures = merge_failures(cr, head, default, host.word)
     if kl.run(kl.git_argv("fetch", "-q", "origin", default), p.root).returncode:
         failures.append(f"could not fetch origin/{default}, so cannot tell whether the branch is up to date")
-    # The gate reads the backlog from this checkout, so it must be the head being merged, unchanged.
+    # The backlog and description checks below read this checkout (gate pr reads the head
+    # on its own), so it must be the head being merged, unchanged.
     here = kl.run(kl.git_argv("rev-parse", "HEAD"), p.root).stdout.strip()
     dirty = kl.run(kl.git_argv("status", "--porcelain", "--untracked-files=no"), p.root).stdout.strip()
     if here != cr.head_sha or dirty:

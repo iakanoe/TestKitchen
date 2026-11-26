@@ -336,22 +336,33 @@ def parse_config(data, root=None):
                   releases=list(releases) if releases else None, ignore=ignore)
 
 
-def load_config(root):
-    """Read and validate `<root>/kitchen.yml`. The host is detected from origin when absent.
+def load_config(root, rev=None):
+    """Read and validate `kitchen.yml`. The host is detected from origin when absent.
+
+    Without `rev`, the file in the working tree at `root`. With `rev`, the committed file
+    at that revision (and kitchen.lock there too), so a gate that judges a revision reads
+    the configuration that revision holds, not the checkout's or uncommitted edits
+    (DLV-R48; `deliver.py gate pr`).
 
     A missing file, a file that is not UTF-8, invalid YAML, or invalid values raise
     ConfigError, whose text lists every problem, one per line.
 
     The framework files kitchen.lock lists are loaded into `Config.framework`.
     """
-    path = Path(root) / CONFIG_FILE
-    if not path.is_file():
-        raise ConfigError(f"{CONFIG_FILE}: not found at {path}; run init.py to install Test Kitchen")
+    if rev:
+        raw = blobs_at(root, rev, [CONFIG_FILE]).get(CONFIG_FILE)
+        if raw is None:
+            raise ConfigError(f"{CONFIG_FILE}: not found at {rev}")
+    else:
+        path = Path(root) / CONFIG_FILE
+        if not path.is_file():
+            raise ConfigError(f"{CONFIG_FILE}: not found at {path}; run init.py to install Test Kitchen")
+        raw = path.read_bytes()
     yaml = _yaml()
-    # Only the read can fail on encoding: a file saved as Latin-1 or UTF-16 is one clear
+    # Only the decoding can fail on encoding: a file saved as Latin-1 or UTF-16 is one clear
     # configuration error, not a traceback (CONF-R26; US-CONF-16/AC1).
     try:
-        text = path.read_text(encoding="utf-8")
+        text = raw.decode("utf-8")
     except UnicodeDecodeError:
         raise ConfigError(f"{CONFIG_FILE}: not valid UTF-8")
     try:
@@ -359,21 +370,26 @@ def load_config(root):
     except yaml.YAMLError as e:
         raise ConfigError(f"{CONFIG_FILE}: invalid YAML: {e}")
     cfg = parse_config(data, root)
-    cfg.framework = framework_files(root)
+    cfg.framework = framework_files(root, rev)
     return cfg
 
 
-def framework_files(root):
+def framework_files(root, rev=None):
     """Paths kitchen.lock lists under `files` (JSON written by init.py), plus their `.kitchen-new` copies.
 
+    Read from the working tree, or committed at `rev` when given (see load_config).
     No lock: nothing is excluded. A lock that is not valid JSON raises ConfigError rather
     than silently scanning the framework's own files.
     """
-    path = Path(root) / LOCK_FILE
-    if not path.is_file():
+    if rev:
+        raw = blobs_at(root, rev, [LOCK_FILE]).get(LOCK_FILE)
+    else:
+        path = Path(root) / LOCK_FILE
+        raw = path.read_bytes() if path.is_file() else None
+    if raw is None:
         return frozenset()
     try:
-        files = json.loads(path.read_text(encoding="utf-8")).get("files") or {}
+        files = json.loads(raw.decode("utf-8")).get("files") or {}
     except (ValueError, AttributeError) as e:
         raise ConfigError(f"{LOCK_FILE}: not valid JSON ({e}); restore it from git history")
     if not isinstance(files, dict):
@@ -501,6 +517,34 @@ def tracked_files(root, rev=None):
         dirs[:] = [x for x in dirs if not x.startswith(".")]
         files += [Path(d, n).relative_to(root).as_posix() for n in names]
     return sorted(files)
+
+
+def blobs_at(root, rev, paths):
+    """{path: bytes} for the files (blobs) at a revision, read in one `git cat-file --batch` call.
+
+    A path that is missing at `rev`, or is not a file there, is left out. Used wherever a
+    revision is judged as committed (DLV-R48): nothing is read from the working tree.
+    """
+    if not paths:
+        return {}
+    data = "".join(f"{rev}:{path}\n" for path in paths).encode()
+    r = subprocess.run(git_argv("cat-file", "--batch"), cwd=str(root), input=data, capture_output=True)
+    if r.returncode:
+        raise GitError(f"git cat-file --batch failed at {rev}: {r.stderr.decode('utf-8', 'replace').strip()}")
+    out, i, found = r.stdout, 0, {}
+    for path in paths:
+        nl = out.index(b"\n", i)
+        header = out[i:nl].split()
+        i = nl + 1
+        # "<sha> <type> <size>" is followed by the content and a newline, whatever the type
+        # (a path naming a folder prints its tree), so the content is skipped for every
+        # type and kept only for blobs; "<object> missing" has no content.
+        if len(header) == 3:
+            size = int(header[2])
+            if header[1] == b"blob":
+                found[path] = out[i:i + size]
+            i += size + 1
+    return found
 
 
 def read_text(path):
