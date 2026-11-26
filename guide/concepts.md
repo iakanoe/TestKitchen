@@ -27,7 +27,7 @@ IDs are stable: never renumbered, never reused. The frontmatter carries `id`, `t
 
 **Blocked by** means "can start, can't finish": a ticket can be `ready` while a blocker is unfinished, but `deliver.py next` never picks it until every blocker is done.
 
-**Readiness.** A ticket can be `ready`, `in-progress`, or `done` only when its owner is set (not `TBD`), every open question is answered, a story or task has at least one live criterion, and, when release slices are on, it has a `release`.
+**Readiness.** A ticket other than an epic can be `ready`, `in-progress`, or `done` only when its owner is set (not `TBD`), every open question is answered, a story or task has at least one live criterion, and, when release slices are on, it has a `release`.
 
 ## Acceptance criteria
 
