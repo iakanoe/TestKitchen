@@ -46,7 +46,7 @@ What an install does, in order:
 
 ### Answering without a terminal
 
-Questions are read from the terminal, even when the script arrives through a pipe (`curl … | python3 -`, where standard input is the script itself). With `--yes`, or without any terminal (an agent's shell, CI), nothing is asked: each question takes its flag or its guess, and a required answer with neither stops the run with exit code 2 and the flag to pass. Without a terminal and without `--yes`, the run stops before writing, because nobody confirmed the plan.
+Questions are read from the terminal, even when the script arrives through a pipe (`curl … | python3 -`, where standard input is the script itself). With `--yes`, or without any terminal (CI; an agent's shell may have none), nothing is asked: each question takes its flag or its guess, and a required answer with neither stops the run with exit code 2 and the flag to pass. Without a terminal and without `--yes`, the run stops before writing, because nobody confirmed the plan.
 
 Exit codes: `0` success, `1` a failure (prerequisite, download, or a `FAIL` in `doctor` mode; an install still exits `0` once its files are written, even if the doctor run after it reports a failure), `2` a usage problem (including a missing answer).
 
