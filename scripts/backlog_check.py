@@ -739,13 +739,17 @@ def main(argv):
             # the live description): only the description after its marker line is checked.
             described = kl.record_description(text)
             errors += cr_body_errors(text if described is None else described, bl)
-    c = bl.counts()
-    print("backlog: " + ", ".join(f"{c[t]} {t}" for t in TYPES)
-          + f"; {len(errors)} error(s), {len(bl.warnings)} warning(s)")
-    emit("ERROR", errors)
-    emit("WARN ", bl.warnings)
     strict = "--strict" in argv
     uncovered = [(r, "not cited by any story or task") for r in bl.uncovered()]
+    # The summary counts every line printed under it: uncovered requirements are errors
+    # with --strict and warnings without (DEF-R40, US-DEF-30). They still print last.
+    n_errors = len(errors) + (len(uncovered) if strict else 0)
+    n_warnings = len(bl.warnings) + (0 if strict else len(uncovered))
+    c = bl.counts()
+    print("backlog: " + ", ".join(f"{c[t]} {t}" for t in TYPES)
+          + f"; {n_errors} error(s), {n_warnings} warning(s)")
+    emit("ERROR", errors)
+    emit("WARN ", bl.warnings)
     emit("ERROR" if strict else "WARN ", uncovered)
     return 1 if errors or (strict and uncovered) else 0
 
