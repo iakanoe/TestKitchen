@@ -2,6 +2,34 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-DLV-03 waits for SPK-DLV-02; TASK-DEF-05 is ready
+
+- Decision: Refinement of TASK-DLV-03 pauses until SPK-DLV-02 is done; the fourth ticket-mode review's open points are its open questions, with a proposed direction in its Notes. SPK-DLV-02 also checks what a guard "ask" does inside a subagent. TASK-DEF-05 passed refinement and is `ready`.
+- Why: Four ticket-mode reviews each found new edge cases of a design that SPK-DLV-02 can still change (if the guard does not cover the reviewer a ticket's subagent starts, the reviews move to the main session); TASK-DLV-03 cannot finish before the spike anyway, and each further round costs tokens for a change meant to save them.
+- Decided by: Ianick Noejovich.
+- Recorded in: TASK-DLV-03, SPK-DLV-02, TASK-DEF-05.
+
+### 2026-11-26 — TASK-DLV-03 settles the checkout, the agent file, and DLV-R55
+
+- Decision: A `ticket-deliverer` subagent that stops at "ready to merge" switches to the up-to-date default branch before it returns, so the next ticket's step 1 does not stop on an unmerged branch. The agent file sets no model and no tools list, and carries the skill's guard rules (a denial is final, plain push and merge commands), since the subagent runs the merge. DLV-R53 is superseded by DLV-R55, which adds the replacement subagent when one cannot be resumed. Under `/deliver all` the ticket subagents run one at a time, each given only the ticket ID and the request to follow `playbooks/deliver.md`; a spike or decision is finished when it is merged as its variant says.
+- Why: The third ticket-mode review found that "per-ticket instructions" could carry what earlier tickets learned, that a merged spike never reaches step 14, that subagents could run together in one checkout, that every ticket after a "ready to merge" would stop at step 1, and that the fallback had no requirement behind it.
+- Decided by: Ianick Noejovich.
+- Recorded in: DLV-R55 (supersedes DLV-R53); TASK-DLV-03.
+
+### 2026-11-26 — TASK-DLV-03 names its worker agent and when a ticket is finished
+
+- Decision: Under `/deliver all`, each ticket runs in a dedicated `ticket-deliverer` subagent (a new `template/claude/agents/ticket-deliverer.md`), given only the ticket ID; the main session picks, runs the hand-off to define, and prints the closing status. A ticket is finished when its subagent closed it through step 14 or stopped at "ready to merge" as the autonomy level or the manual host requires; a supervised approval is a question; a subagent that returns otherwise stops `/deliver all`. When a subagent cannot be resumed, a new `ticket-deliverer` for that ticket gets the answers and continues from the pushed branch or starts again. The skill and the agent read the playbook in full first, one file per call (TASK-DEF-05 says the same for `/define`).
+- Why: The second ticket-mode review found that "without finishing" would stop `/deliver all` at every ticket waiting for a person's merge, which step 14 and US-DLV-23/AC3 forbid; that a subagent given only the ID would never see the skill's instructions; and that picking and the hand-off need AskUserQuestion, which subagents lack. TASK-DLV-03's criteria were rewritten in place rather than retired as placeholders: it is a draft that no test, plan, or record cites.
+- Decided by: Ianick Noejovich.
+- Recorded in: TASK-DLV-03, TASK-DEF-05.
+
+### 2026-11-26 — The fresh-context story becomes a task
+
+- Decision: US-DLV-42 becomes TASK-DLV-03, an untestable task, and its ID is retired, never reused; its criteria now say what the playbook and the `/deliver` skill tell the agent. A ticket's subagent that has a question commits and pushes the work it has, if any, and the main session resumes that same subagent with the answers. A subagent that returns unfinished with no question stops `/deliver all` (DLV-R39). The `/define` half of DLV-R54 moves to TASK-DEF-05 in EP-DEF. DLV-R54 names its files (a wording fix).
+- Why: The ticket-mode review found that no test can check the playbook's or skill's wording, which the entry "Review-only stories become tasks" already settles; resuming keeps the plan, which before the claim lives only outside the repository; EP-DLV's Boundaries give the define skill to EP-DEF.
+- Decided by: Ianick Noejovich.
+- Recorded in: DLV-R54; TASK-DLV-03, TASK-DEF-05, SPK-DLV-02. The entry "Fresh context per ticket under /deliver all" names the old ID.
+
 ### 2026-11-26 — Fresh context per ticket under /deliver all
 
 - Decision: `/deliver all` delivers each ticket in a fresh context where the agent can start one (DLV-R52); in Claude Code, a subagent per ticket that commits, pushes, and hands its questions back to the main session, which asks them, since `AskUserQuestion` is not available inside subagents (DLV-R53); the `/deliver` and `/define` skills read the playbooks and rule files one file per call (DLV-R54). Advice on lean sessions waits for a measurement (SPK-DLV-01). Reviews and what agents read stay unchanged.
