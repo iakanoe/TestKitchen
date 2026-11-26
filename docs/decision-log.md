@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-26 — TASK-DEF-03: Done wording follows --gaps
+
+- Decision: the "Done" paragraph of `template/playbooks/define.md` and `guide/define.md`, "Done means no gaps", now list unconfirmed `(observed in code)` requirements and draft stories and tasks as gaps, and define coverage as "not superseded and not in a deferred epic … cited by a story or task that is not deferred", as `--gaps` checks (the deferred-epic exception confirmed in `uncovered()`). The "refined" item was left as it is: changing it to ready or in-progress tickets is beyond the criteria, so it is filed as DEC-DEF-06. Delivers TASK-DEF-03 (DEC-DEF-03, option (a), as widened on 2026-11-26).
+- Why: the plan review held the refined change outside DEF-R44.
+- Decided by: the delivering agent, within TASK-DEF-03's criteria; DEC-DEF-06 is for a person.
+- Recorded in: the two files; this repository's installed `playbooks/define.md` refreshed through `init.py update`.
+
 ### 2026-11-26 — TASK-DEF-02: readiness wording
 
 - Decision: both "Readiness" texts now begin "A ticket other than an epic …" (`template/backlog/README.md`, `guide/concepts.md`), with no added rationale, the smallest wording that meets DEF-R43. Delivers TASK-DEF-02 (DEC-DEF-02, option (b), as widened on 2026-11-26).
