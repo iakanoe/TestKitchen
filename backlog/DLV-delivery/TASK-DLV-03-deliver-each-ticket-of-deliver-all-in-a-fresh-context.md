@@ -23,7 +23,7 @@ Change the delivery playbook and the `/deliver` skill, and add a `ticket-deliver
 
 ## Notes
 
-- Replaces US-DLV-42, retired and never reused (decision log, "US-DLV-42 becomes TASK-DLV-03"). An untestable task: the final review verifies each criterion by reading the files (DLV-R37). DEC-DEF-05 asks how such criteria should be accepted from now on.
+- Replaces US-DLV-42, retired and never reused (decision log, "The fresh-context story becomes a task"). An untestable task: the final review verifies each criterion by reading the files (DLV-R37). DEC-DEF-05 asks how such criteria should be accepted from now on.
 - The worker is the dedicated `ticket-deliverer` agent, and a subagent that cannot be resumed is replaced by a new one (decision log, "TASK-DLV-03 names its worker agent and when a ticket is finished").
 - The root copies (`.claude/skills/deliver/SKILL.md`, `.claude/agents/`, `playbooks/deliver.md`) are an installed release: they change only through `init.py update`, never by hand.
 - Documents that name the Claude Code agents and need `ticket-deliverer` added (step 10): `template/CLAUDE.md.tmpl`, `template/CONTRIBUTING.md` (the Claude Code part of "Running it"), `guide/install.md` (the installed-files table), and `guide/agents.md`.

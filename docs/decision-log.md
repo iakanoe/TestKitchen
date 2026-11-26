@@ -23,7 +23,7 @@ Every decision about Test Kitchen, newest first. Each entry is a level-3 heading
 - Decided by: Ianick Noejovich.
 - Recorded in: TASK-DLV-03, TASK-DEF-05.
 
-### 2026-11-26 — US-DLV-42 becomes TASK-DLV-03
+### 2026-11-26 — The fresh-context story becomes a task
 
 - Decision: US-DLV-42 becomes TASK-DLV-03, an untestable task, and its ID is retired, never reused; its criteria now say what the playbook and the `/deliver` skill tell the agent. A ticket's subagent that has a question commits and pushes the work it has, if any, and the main session resumes that same subagent with the answers. A subagent that returns unfinished with no question stops `/deliver all` (DLV-R39). The `/define` half of DLV-R54 moves to TASK-DEF-05 in EP-DEF. DLV-R54 names its files (a wording fix).
 - Why: The ticket-mode review found that no test can check the playbook's or skill's wording, which the entry "Review-only stories become tasks" already settles; resuming keeps the plan, which before the claim lives only outside the repository; EP-DLV's Boundaries give the define skill to EP-DEF.
