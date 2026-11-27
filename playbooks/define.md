@@ -75,6 +75,7 @@ A product is defined in this order, because each layer is the input of the next.
 - **Does this need deciding now?** Ask yourself before every decision. If nothing ready, nothing in the current release slice, and nothing being built depends on it, propose deferring it. Deferring is itself a decision: it is logged, the DEC gets `status: deferred`, and every ticket that names it states its interim behavior (`Until decided: …`) or is deferred with it.
 - **Short answers are normal** ("a", "ok", "1 yes, 2 no"). If an answer is ambiguous, say how you read it when you report back.
 - **Options come from the record.** Present only the options `docs/` or the DEC records as recorded options; label your own as proposals.
+- **Check open decisions before recommending.** Before you recommend anything in a decision round, search `docs/decision-log.md` and the open DECs (every DEC that is not `done` or `deferred`) for the same kind of question. Present an option that matches an open DEC's option as that DEC (name it and run its decision round), never as an ordinary choice: picking it in passing would decide the DEC without the person seeing it.
 
 ### Decision format
 
@@ -87,12 +88,24 @@ Use this for every DEC, and for any round where the person chooses:
 
 **Already fixed:** <what docs/ and earlier decisions settle, with their IDs>.
 
-- (a) **<option> (recommended).** <why, and what it costs>.
-- (b) <option>. <what it costs>.
-- (c) Defer. <what stays open, and the interim behavior>.
+- (a) **<option> (recommended).**
+  - For: <what it gives>.
+  - Against: <what it costs, and what in docs/, the backlog, or the decision log it conflicts with>.
+- (b) <option>.
+  - For: <what it gives>.
+  - Against: <what it costs, and what it conflicts with>.
+- (c) Defer.
+  - For: <what waiting gains>.
+  - Against: <what stays open, and the interim behavior>.
+
+**Recommendation:** (a). <why it beats (b), and why it beats (c)>. Strongest reason against it: <the one that weighs most>.
 
 **After you reply:** <what will be written, and where>.
 ```
+
+- **Each option gets one "For" line and one "Against" line.** The Against line names the option's cost and what in `docs/`, the backlog, or the decision log it conflicts with ("conflicts with nothing recorded" when you searched and found nothing). An option you can't fill both lines for is one you haven't evaluated: evaluate it or leave it out.
+- **The recommendation compares.** It says why it beats each other option, one by one, and states the strongest reason against it. "It is simpler" without the comparison is not a recommendation.
+- **When the person questions a recommendation,** re-evaluate it against every option before answering, then say what you missed, or that nothing changed and why. Never switch to another option just because it was questioned, and never defend it without re-checking.
 
 Several small sub-questions go in one table of at most five rows, answered with "ok" or the rows to change:
 
