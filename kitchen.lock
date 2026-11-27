@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit 124cc0282910)",
+  "source": "local checkout (commit 51f25a48e461)",
   "options": {
     "host": "github",
     "no_claude": false,
