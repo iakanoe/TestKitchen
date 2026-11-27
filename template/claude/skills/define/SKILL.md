@@ -6,7 +6,7 @@ argument-hint: "[mode] [topic]"
 
 # Define
 
-Follow `playbooks/define.md`. Read it in full first, together with `backlog/README.md` and `AGENTS.md`. It is the process; this file adds only what is specific to Claude Code.
+Follow `playbooks/define.md`. Read it in full first, then `backlog/README.md` and `AGENTS.md`, with the file-read tool, one file per call, never combined with other commands in one shell call: a combined call can overflow into a saved file that is then read a second time (DLV-R54). It is the process; this file adds only what is specific to Claude Code.
 
 ## Arguments
 

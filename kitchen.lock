@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit 51f25a48e461)",
+  "source": "local checkout (commit 75b46440e8b0)",
   "options": {
     "host": "github",
     "no_claude": false,
@@ -12,7 +12,7 @@
     ".claude/agents/ticket-reviewer.md": "1f6eb905953f6d123c6912cfbd6751431a739e7a3b12e4c5123133ba0273e7f1",
     ".claude/hooks/guard.py": "1512d4457c8da19ab8404cf0501da47e78fb2b25afe0b948beeada6274c78f56",
     ".claude/settings.json": "af0bf7e84ab744abff72a297d4c4ddbb7eb08d76bbb39471c1f2a25ab528c741",
-    ".claude/skills/define/SKILL.md": "0c177fa6b508dbd385a004c4a6eeb058ae2f12c1fc62a7dce39b60ea39b40dfe",
+    ".claude/skills/define/SKILL.md": "6ef64ee8a75364902b83d3315b170d9730d6ebc899c38e9ddbfeb981f7b98466",
     ".claude/skills/deliver/SKILL.md": "27d945116220a20548e48549e20909712caab67fa40dfc277351033a07617aa7",
     ".github/pull_request_template.md": "c329ea825ade1598b565b8b11210b340c9aec61bb747397d0c9ffbfada8267f3",
     ".github/workflows/check.yml": "1acc84ca99c1ebb93273c5afdf262e660d608ed50ea1e0d5d92942b52a133c11",
