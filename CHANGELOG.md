@@ -7,6 +7,7 @@ Test Kitchen follows semantic versioning. Each release has a `## x.y.z — date`
 ### Changed
 
 - The guard refuses, instead of asking, a call made in a subagent that it would ask about (the hook input carries an `agent_id`), keeping the ask's reasons and telling the subagent to hand the step back to the main session. In auto permission mode a subagent's asks were approved by a classifier rather than the person. The sandbox opt-in (`KITCHEN_GUARD_SANDBOX=1`) applies first; a force push from a subagent is refused.
+- The `/define` skill tells the agent to read `playbooks/define.md` in full first, then `backlog/README.md` and `AGENTS.md`, with the file-read tool, one file per call, never combined with other commands in one shell call, so a combined call no longer overflows into a saved file that is read twice.
 
 ### Fixed
 
