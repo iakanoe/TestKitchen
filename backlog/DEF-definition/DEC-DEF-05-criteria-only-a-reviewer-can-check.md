@@ -7,7 +7,7 @@ source_reqs: [DEF-R14, DLV-R37]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -36,3 +36,7 @@ All three were named by the owner on 2026-11-26; none is recorded in `docs/` yet
 ## Decides
 
 No ticket waits on it.
+
+## Outcome
+
+2026-11-27: option (b), the `(review)` marker, decided by Ianick Noejovich. Recorded in DEF-R47, DEF-R48, DLV-R56, DLV-R57, DLV-R58 and the decision log ("Review-only criteria carry a (review) marker"); built by US-DEF-34, US-DLV-43, TASK-DLV-04, TASK-DEF-06, and TASK-DEF-07.

@@ -2,6 +2,20 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — Agents check open decisions and evaluate options before recommending
+
+- Decision: Before recommending in a decision round, the agent searches the decision log and the open DECs for the same kind of question, and presents an option that matches an open DEC's option as that DEC, never as an ordinary choice (DEF-R49). Each option in a decision brief has one "For" and one "Against" line naming its cost and what in `docs/`, the backlog, or the decision log it conflicts with; the recommendation says why it beats each other option and the strongest reason against it; when the person questions a recommendation, the agent re-evaluates and says what it missed, or that nothing changed (DEF-R50). Delivery's questions round follows both (DLV-R59).
+- Why: On 2026-11-26 an agent refining US-DLV-42 recommended text tests, an option of the then-open DEC-DEF-05, as an ordinary ticket choice, which would have decided the DEC silently; and it presented a recommendation (keep refining TASK-DLV-03) that it reversed as soon as the owner asked why, because it had not weighed the open spike. Both reached the owner before any check caught them.
+- Decided by: Ianick Noejovich.
+- Recorded in: DEF-R49, DEF-R50, DLV-R59; TASK-DEF-06, TASK-DLV-04.
+
+### 2026-11-27 — Review-only criteria carry a (review) marker
+
+- Decision: A criterion whose text starts with `(review)` is one only reading can check (the wording of a playbook, a guide, or an instruction file). A `done` story needs no tagged test for it, it is never test debt, and a test tag naming it is an error (DEF-R47, superseding DEF-R14; DEF-R48). `gate red` skips it and names it (DLV-R56, superseding DLV-R08); `gate pr` requires the final review to write `Checked by review: <ID>/AC<n>` for each one (DLV-R57); the reviewer checks each one by name and challenges markers a test could check (DLV-R58). Only a person adds the marker, at a define checkpoint; adding it to a live criterion of an adopted `done` story, with the person's yes, is the second allowed edit to a done ticket. Closes DEC-DEF-05 with option (b). The new tickets replace US-DEF-10/AC4, AC5, AC6 and US-DLV-06/AC2, AC4 (shown to the owner and approved).
+- Why: It keeps review-only criteria in the tickets they belong to instead of splitting them into tasks late (as US-DLV-42 had to be), it clears the test debt no test can pay (about 150 of 636 lines, the owner's estimate), and it checks each such criterion by name, which the untestable-task route does not. Text tests (option (c)) were rejected: they prove only that words exist, as "Review-only stories become tasks" recorded. Until US-DEF-34 and US-DLV-43 are delivered, review-only work still uses untestable tasks.
+- Decided by: Ianick Noejovich.
+- Recorded in: DEF-R47, DEF-R48, DLV-R56, DLV-R57, DLV-R58; DEC-DEF-05 (outcome); US-DEF-34, US-DLV-43, TASK-DLV-04, TASK-DEF-06, TASK-DEF-07.
+
 ### 2026-11-26 — TASK-DLV-03 waits for SPK-DLV-02; TASK-DEF-05 is ready
 
 - Decision: Refinement of TASK-DLV-03 pauses until SPK-DLV-02 is done; the fourth ticket-mode review's open points are its open questions, with a proposed direction in its Notes. SPK-DLV-02 also checks what a guard "ask" does inside a subagent. TASK-DEF-05 passed refinement and is `ready`.
