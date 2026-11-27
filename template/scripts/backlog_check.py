@@ -13,6 +13,9 @@ checks them against the conventions in `backlog/README.md`:
   criterion, a release); a `done` ticket has no unfinished blocker; `replaces:` entries
   name existing criteria of `done` tickets, and a `done` ticket's replaced criteria are
   crossed out as `(removed …)` placeholders;
+- decisions (DEF-R51): an open DEC (not `done` or `deferred`) gives each `- (x)` option
+  under `## Options` a `For:` line and an `Against:` line and has no `## Outcome`; a `done`
+  or `deferred` DEC has an `## Outcome`;
 - trace: test tags (`[US-PAY-03/AC2]` or `us_pay_03_ac2`) name a live criterion of a
   started ticket; a `done` story has a tagged test for every live criterion (adopted
   stories report missing ones as test debt instead); every TODO/FIXME/XXX/HACK names a
@@ -69,6 +72,16 @@ TODO = re.compile(r"\b(?:TODO|FIXME|XXX|HACK)\b")
 OBSERVED = re.compile(r"^\(observed in code\)")
 SUPERSEDED = re.compile(rf"^\(superseded (\d{{4}}-\d\d-\d\d) by ({kl.CODE}-R\d{{2,}})\)")
 LOG_REF = re.compile(r"\bLog: (.+?)\.?\s*$")
+# The DEC format (DEF-R51, US-DEF-35). An option is an unindented `- (x)` bullet, one
+# lowercase letter, followed by a space or the end of the line; an indented one is a note.
+DEC_OPTION = re.compile(r"^- \(([a-z])\)(?=\s|$)")
+# A line evaluates an option when its text, after indentation and an optional `- `, starts
+# with `For:` or `Against:`; the word later in a line does not count.
+DEC_PRO_CON = re.compile(r"^[ \t]*(?:- )?(For|Against):")
+# Exactly `## Outcome` (trailing spaces ignored, as `kitchen_lib.section` does): not
+# `### Outcome`, not `## Outcomes`.
+DEC_OUTCOME = re.compile(r"^## Outcome[ \t]*$", re.M)
+DECIDED = ("done", "deferred")
 # Change-request description sections checked here, and what each bullet must point to.
 CR_SECTIONS = {"Gaps found": "ticket", "Decisions": "log", "Platform changes": "log"}
 # With `self_contained_tickets: true`, tickets are read outside the repository (a tracker,
@@ -270,6 +283,8 @@ class Backlog:
         t = Ticket(tid, ttype, rel, fm, body)
         if ttype in WITH_CRITERIA:
             self._criteria(t)
+        if ttype == "decision":
+            self._dec_format(t)
         if tid in self.tickets:
             self.error(rel, f"duplicate id `{tid}` (also {self.tickets[tid].rel})")
         else:
@@ -303,6 +318,42 @@ class Backlog:
                 self.error(t.rel, f"AC{n} is empty")
             else:
                 found[n] = True
+
+    def _dec_format(self, t):
+        """The DEC format (DEF-R51, US-DEF-35): an open DEC's options are evaluated and it has
+        no outcome yet; a decided one has its outcome.
+
+        "Open" is every status but `done` and `deferred`, an invalid one included (that is
+        reported on its own), so an unknown status never skips the check. Options are read
+        only under `## Options`: `- (x)` bullets elsewhere (a recommendation, the context)
+        are not options (AC5), and a decided DEC's options are history, not checked (AC4).
+        """
+        body = t.body.replace("\r\n", "\n")
+        has_outcome = bool(DEC_OUTCOME.search(body))
+        if t.status in DECIDED:
+            if not has_outcome:
+                self.error(t.rel, f"{t.id}: the decision has no outcome (status {t.status}): "
+                                  "add `## Outcome` (DEF-R51)")
+            return
+        if has_outcome:
+            self.error(t.rel, f"{t.id}: an open decision records an outcome: remove `## Outcome`, "
+                              "or set status done or deferred once decided (DEF-R51)")
+        # Each option runs to the next option or the end of `## Options` (AC1).
+        options, current = [], None
+        for line in (kl.section(body, "Options") or "").splitlines():
+            m = DEC_OPTION.match(line)
+            if m:
+                current = [m.group(1), set()]
+                options.append(current)
+            elif current:
+                pc = DEC_PRO_CON.match(line)
+                if pc:
+                    current[1].add(pc.group(1))
+        for letter, seen in options:
+            missing = [f"`{k}:`" for k in ("For", "Against") if k not in seen]
+            if missing:
+                self.error(t.rel, f"{t.id}: option ({letter}) under ## Options has no "
+                                  f"{' or '.join(missing)} line (DEF-R51)")
 
     # --- cross-ticket rules ---------------------------------------------------------------
 

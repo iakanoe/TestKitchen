@@ -720,7 +720,7 @@ class NextTest(unittest.TestCase):
         files = {
             f"{EPIC_DIR}/DEC-PAY-01-a.md": dec("DEC-PAY-01"),
             f"{EPIC_DIR}/DEC-PAY-02-b.md": dec("DEC-PAY-02"),
-            f"{EPIC_DIR}/DEC-PAY-03-c.md": dec("DEC-PAY-03", "deferred"),
+            f"{EPIC_DIR}/DEC-PAY-03-c.md": dec("DEC-PAY-03", "deferred") + "\n## Outcome\n\nParked.\n",
             f"{EPIC_DIR}/US-PAY-01-a.md": ticket("US-PAY-01", blocked_by=("DEC-PAY-01",)),
             f"{EPIC_DIR}/US-PAY-02-b.md": ticket("US-PAY-02", blocked_by=("DEC-PAY-01",)),
             f"{EPIC_DIR}/US-PAY-03-c.md": ticket("US-PAY-03", blocked_by=("TASK-PAY-09",)),

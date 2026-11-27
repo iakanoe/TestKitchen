@@ -279,7 +279,7 @@ class TraceTest(Base):
 
     def test_dec_mentions(self):
         self.assertError({"src/pay.py": "# Fails closed until DEC-PAY-04 is decided.\n"}, "`DEC-PAY-04` does not exist")
-        self.assertWarn({DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done"),
+        self.assertWarn({DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done") + "\n## Outcome\n\nB, logged.\n",
                          "src/pay.py": "# Seam for DEC-PAY-01.\n"}, "DEC-PAY-01 is decided; revisit this seam")
 
     def test_no_trace_files_are_data_not_trace(self):
@@ -376,7 +376,7 @@ class CrBodyTest(Base):
                 self.assertIn(text, out)
 
     def test_a_done_dec_stands_in_for_a_log_entry(self):
-        done = {DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done")}
+        done = {DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done") + "\n## Outcome\n\nB, logged.\n"}
         code, out = self.body_check(self.GOOD.replace(" Log: Refunds stay manual.", " Decided in DEC-PAY-01."), done)
         self.assertEqual(code, 0, out)
 
@@ -395,7 +395,7 @@ class ModesTest(Base):
         files = {
             "backlog/PAY-payments/epic.md": EPIC.format(extra='code: ["src/pay/**"]\n'),
             DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="ready", title="Limit source"),
-            f"{EPIC_DIR}/DEC-PAY-02-parked.md": ticket("DEC-PAY-02", type="decision", assignee="human", status="deferred"),
+            f"{EPIC_DIR}/DEC-PAY-02-parked.md": ticket("DEC-PAY-02", type="decision", assignee="human", status="deferred") + "\n## Outcome\n\nB, logged.\n",
             f"{EPIC_DIR}/SPK-PAY-01-probe.md": ticket("SPK-PAY-01", type="spike", status="draft", reqs=()),
             US5: ticket("US-PAY-05", status="draft", owner="TBD", reqs=(), questions=["Who approves refunds?"]),
             f"{EPIC_DIR}/US-PAY-06-ready.md": ticket("US-PAY-06", reqs=("PAY-R01",)),
@@ -449,7 +449,7 @@ class ModesTest(Base):
         long = ticket("US-PAY-05", reqs=("PAY-R03",), criteria=[f"Given {i}, when x, then y." for i in range(1, 9)],
                       questions=["Limit source: DEC-PAY-01."], extra="release: v1\n")
         files = {
-            DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done"),
+            DEC1: ticket("DEC-PAY-01", type="decision", assignee="human", status="done") + "\n## Outcome\n\nB, logged.\n",
             US5: long,
             f"{EPIC_DIR}/US-PAY-06-x.md": ticket("US-PAY-06", status="in-progress", extra="release: v1\n"),
             f"{EPIC_DIR}/US-PAY-07-x.md": ticket("US-PAY-07", status="draft", owner="TBD"),
