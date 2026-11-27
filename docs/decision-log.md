@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — How the define skill words its one-file-per-call reading
+
+- Decision: TASK-DEF-05 rewrites the define skill's opening (`template/claude/skills/define/SKILL.md`, and its installed copy through `init.py update`) to "Read it in full first, then `backlog/README.md` and `AGENTS.md`, with the file-read tool, one file per call, never combined with other commands in one shell call", followed by the reason: a combined call can overflow into a saved file that is then read a second time (DLV-R54). The two files keep the order DLV-R54 lists them in; no order between them is required. `CHANGELOG.md` gets a line under Unreleased, Changed. The `/deliver` skill's half of DLV-R54 stays with TASK-DLV-03.
+- Why: The criterion's words are used as they are so the skill and DLV-R54 read the same; the reason is the overflow measured on the US-DLV-38 run (TASK-DLV-03, Notes), so the next reader knows why the rule exists. The plan review's suggestion not to require an order between the two files was applied.
+- Decided by: the delivering agent (wording left to the implementation).
+- Recorded in: `template/claude/skills/define/SKILL.md`; `CHANGELOG.md`; TASK-DEF-05's delivery record.
+
 ### 2026-11-27 — The guard's hand-back line for subagent calls
 
 - Decision: A subagent's deny (GRD-R36, US-GRD-17) is the ask's reasons, deduplicated and in the ask's order (force-push reasons first), followed by one last line: "This call came from a subagent, where the guard can't ask the person; hand this step back to the main session, which runs it and the person is asked there." The rule sits in `finish()` after the sandbox opt-in, read from `agent_id` by `is_subagent()` as "How the guard reads agent_id" says. Documented in the guard's docstring, `template/CONTRIBUTING.md` (the root copy through `init.py update`), `guide/agents.md`, and `CHANGELOG.md` (a change and a migration note).
