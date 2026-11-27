@@ -20,11 +20,13 @@ Changes:
 - SPK-DLV-01: the corrected figure, and measurement with `tools/usage_report.py`.
 - TASK-DLV-03: the corrected figure in Notes.
 
+Follow-up, not a gap: `tools/usage_report.py` itself is built in a separate `chore/` change, with tests on synthetic transcripts; it has no ticket by decision.
+
 Constrained by: `playbooks/define.md` (change), `backlog/README.md`.
 
 ## Gaps found
 
-- `tools/usage_report.py` is not built yet: a separate `chore/` change, with tests on synthetic transcripts.
+- None
 
 ## Decisions
 
