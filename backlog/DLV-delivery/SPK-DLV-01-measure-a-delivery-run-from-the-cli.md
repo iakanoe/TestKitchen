@@ -16,13 +16,13 @@ Find out how much a delivery run costs per step from the plain `claude` CLI, com
 
 ## Context
 
-- The US-DLV-38 run (2026-11-26, desktop app) cost about 2.37M effective tokens, counting cache reads at 0.1×, cache writes at 2×, and output at 5× an input token. Each of its 69 steps re-read a base of about 79k tokens, of which about 18.9k were loaded tool definitions, mostly the desktop app's own tools; the connector tools were deferred and cost little.
+- The US-DLV-38 run (2026-11-26, desktop app) cost about 1.61M effective tokens, weighted with the pricing page's multipliers for Claude Opus 5.5 (cache reads 0.05×, 1-hour cache writes 2×, output 5×; first reported as 2.37M with a flat 0.1× read weight). Each of its 69 steps re-read a base of about 79k tokens, of which about 18.9k were loaded tool definitions, mostly the desktop app's own tools; the connector tools were deferred and cost little.
 - Documented on code.claude.com (mcp page, checked 2026-11-26): `--strict-mcp-config` loads only the servers passed with `--mcp-config`; `disableClaudeAiConnectors` turns off claude.ai connectors.
 - Unmeasured: how large the per-step base is from the CLI.
 
 ## Done when
 
-- A ticket of similar size is delivered from the `claude` CLI and measured the same way, and Findings record its per-step base, its total, and both Claude Code versions.
+- A ticket of similar size is delivered from the `claude` CLI and measured with `tools/usage_report.py`, and Findings record its per-step base, its total, and both Claude Code versions.
 - If the CLI run is meaningfully cheaper, a follow-up ticket is filed to document lean delivery runs in `CONTRIBUTING.md`; otherwise Findings say no follow-up is needed.
 
 ## Findings
