@@ -7,7 +7,7 @@ source_reqs: [DEF-R51]
 blocked_by: [TASK-DEF-06]
 owner: Ianick Noejovich
 assignee_type: either
-status: in-progress
+status: done
 refined: 2026-11-27
 ---
 
