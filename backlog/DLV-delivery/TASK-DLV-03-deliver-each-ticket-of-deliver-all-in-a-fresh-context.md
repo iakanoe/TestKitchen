@@ -4,7 +4,7 @@ type: task
 title: Deliver each ticket of /deliver all in a fresh context
 epic: EP-DLV
 source_reqs: [DLV-R31, DLV-R36, DLV-R39, DLV-R52, DLV-R54, DLV-R55]
-blocked_by: [DEC-GRD-05]
+blocked_by: [US-GRD-17]
 owner: Ianick Noejovich
 assignee_type: either
 status: draft
@@ -38,5 +38,5 @@ Change the delivery playbook and the `/deliver` skill, and add a `ticket-deliver
 
 ## Open questions
 
-- How the guard's asks reach the person when a ticket's subagent makes a protected edit or runs `init.py update` (SPK-DLV-02 found that auto mode's classifier approves them instead; its denials do hold in nested subagents): DEC-GRD-05 (in `blocked_by`).
-- The fourth ticket-mode review (2026-11-26) left these, to settle once DEC-GRD-05 (in `blocked_by`) is decided, since SPK-DLV-02's findings (done 2026-11-27) and that decision can change the design: (1) AC5's replacement subagent can neither continue nor start again as written: before the claim nothing is pushed, and step 1 stops on the old ticket's branch; (2) AC1 gives a fresh context "only the ticket ID" while AC5 also passes the answers; (3) the switch to the default branch at "ready to merge" is only in AC4, not in the playbook for every agent, and DLV-R46 is not in `source_reqs`; (4) DECs come only through the hand-off in the main context, so "decision" in AC6 cannot happen; (5) AC3's "returned" should say "finished (AC6)"; (6) the ticket may be split into the playbook, the skill, and the agent file.
+- How the guard's asks reach the person when a ticket's subagent makes a protected edit or runs `init.py update` (SPK-DLV-02 found that auto mode's classifier approves them instead; its denials do hold in nested subagents): decided by DEC-GRD-05 (the guard denies such asks in a subagent and the step goes back to the main session), built by US-GRD-17 (in `blocked_by`).
+- The fourth ticket-mode review (2026-11-26) left these, to settle now that DEC-GRD-05 is decided (its outcome is built by US-GRD-17, in `blocked_by`), since SPK-DLV-02's findings and that decision can change the design: (1) AC5's replacement subagent can neither continue nor start again as written: before the claim nothing is pushed, and step 1 stops on the old ticket's branch; (2) AC1 gives a fresh context "only the ticket ID" while AC5 also passes the answers; (3) the switch to the default branch at "ready to merge" is only in AC4, not in the playbook for every agent, and DLV-R46 is not in `source_reqs`; (4) DECs come only through the hand-off in the main context, so "decision" in AC6 cannot happen; (5) AC3's "returned" should say "finished (AC6)"; (6) the ticket may be split into the playbook, the skill, and the agent file.

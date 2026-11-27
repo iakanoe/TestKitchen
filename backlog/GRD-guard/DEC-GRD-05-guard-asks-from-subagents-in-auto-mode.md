@@ -7,7 +7,7 @@ source_reqs: [GRD-R19, GRD-R22]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: human
-status: draft
+status: done
 ---
 
 ## Question
@@ -27,7 +27,7 @@ None recorded. Proposals:
 
 - (a) The guard denies, instead of asking, when the hook input carries an `agent_id`, with a reason telling the subagent to hand the step back to the main session, where the ask reaches the person.
   - For: holds in every permission mode without depending on a setting, and fails closed, as undecided cases do.
-  - Against: a ticket's subagent can no longer make protected edits or run `init.py update` itself, so those steps move to the main session (more hand-offs in TASK-DLV-03); it relies on `agent_id` being present only in subagents, which the docs describe but do not promise.
+  - Against: it relies on `agent_id` being present only in subagent calls, which the docs describe but do not promise; a subagent that does need a protected edit hands it back to the main session. (Corrected 2026-11-27: an earlier version said a ticket's subagent could no longer run `init.py update`; run by hand, the guard allows it, along with every other normal delivery step.)
 - (b) Document that subagent-based delivery needs a permission mode in which a subagent's asks reach the person, after a spike checks which modes do.
   - For: no guard change, and protected edits stay inside the ticket's subagent.
   - Against: the guarantee depends on each person's setting, and the guard silently weakens for anyone using auto mode.
@@ -42,3 +42,7 @@ None recorded. Proposals:
 ## Decides
 
 TASK-DLV-03 (blocked by this DEC). On (a), a guard story; on (b), a spike on permission modes and a `CONTRIBUTING.md` change; nothing on (c).
+
+## Outcome
+
+2026-11-27: option (a), with sandbox mode unchanged, decided by Ianick Noejovich. Recorded in GRD-R36 and the decision log ("The guard denies in a subagent what it would ask"); built by US-GRD-17.

@@ -23,6 +23,7 @@ As a project owner, I want the guard to keep appends to the decision log free an
 
 ## Notes
 
+- In a subagent, GRD-R36 turns these asks into denials (US-GRD-17; decision log, "The guard denies in a subagent what it would ask").
 - Implements DEC-GRD-04, option (a), decided 2026-11-25 by Ianick Noejovich (its second part), as made exact on 2026-11-26 (GRD-R34 supersedes GRD-R30). Split from US-GRD-14 on 2026-11-26. It changes the behavior recorded by US-GRD-08 (protected edits) and US-GRD-09 (shell writes), which stay as the record of the earlier behavior.
 - Replaces (to become a `replaces:` field once US-DEF-33 is delivered): US-GRD-08/AC3, which lets every edit of the decision log through (a Write call included), and US-GRD-09/AC6, which lets `echo x > decision-log.md` from inside `docs/` through. AC1 and AC2 restate what those criteria say about appends and Edit and MultiEdit calls, because that part stays true and must not lose its criterion when they are crossed out. A lookalike such as `docs/decision-log.md.bak` keeps asking as a file under `docs/` (US-GRD-08/AC1).
 - Reading of the decided list: the other truncating redirect forms GRD-R22 names (`>|`, `&>`, a numbered descriptor) replace the file as `>` does, and so does `tee` without `-a`.
