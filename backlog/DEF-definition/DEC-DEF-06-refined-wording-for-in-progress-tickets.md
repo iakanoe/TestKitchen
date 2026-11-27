@@ -25,7 +25,11 @@ Should the "Done" texts say that in-progress tickets, not only ready ones, need 
 None recorded. Proposals:
 
 - (a) Say "every ready or in-progress ticket refined" in both texts, matching `--gaps`.
+  - For: the texts then describe exactly what `--gaps` checks, as DEF-R44 promises; two words in two files.
+  - Against: a follow-up task for a case that rarely shows, since a ticket reaches `in-progress` from `ready`.
 - (b) Keep the wording; the in-progress case follows from the ready one.
+  - For: no work, and in practice an in-progress ticket was refined while it was ready.
+  - Against: the texts stay different from `--gaps`, which DEF-R44 says they describe exactly.
 
 ## Recommendation
 

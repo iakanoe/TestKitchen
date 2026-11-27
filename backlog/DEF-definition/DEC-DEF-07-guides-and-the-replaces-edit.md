@@ -24,7 +24,11 @@ Should `guide/define.md` and `guide/why.md` also say that a done ticket's criter
 None recorded. Proposals:
 
 - (a) Add the allowed edit to both guides, in the words the playbook uses.
+  - For: the guides are what people read first, and they would match the playbook.
+  - Against: a follow-up task, and the guides must change again whenever that rule does.
 - (b) Leave the guides as they are: they summarize, and the playbook and README are the rules.
+  - For: no work, and the rules stay in one place.
+  - Against: the guides say done tickets are never rewritten, which contradicts the one allowed edit and misleads first readers.
 
 ## Recommendation
 

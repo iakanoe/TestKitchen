@@ -7,7 +7,7 @@ source_reqs: [DEF-R48]
 blocked_by: [US-DEF-34, TASK-DEF-06]
 owner: Ianick Noejovich
 assignee_type: either
-status: draft
+status: deferred
 ---
 
 Add `(review)` to the live criteria of adopted `done` stories that only reading can check, so that `--test-debt` lists only debt a test can pay.
@@ -18,6 +18,7 @@ Add `(review)` to the live criteria of adopted `done` stories that only reading 
 
 ## Notes
 
+- Retired 2026-11-27: DEC-DEF-05 reversed (decision log, "Review-only work stays in untestable tasks"); this ID is never reused.
 - The owner estimated about 150 of the 636 `DEBT` lines on 2026-11-26 are review-only.
 - Adding the marker to an adopted done story is the second allowed edit to a done ticket (DEF-R48); nothing else in those tickets changes.
 - The person decides each marker: the agent proposes a batch per epic, with each criterion's text, at a define checkpoint.

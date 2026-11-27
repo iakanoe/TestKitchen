@@ -7,7 +7,7 @@ source_reqs: [DLV-R56, DLV-R57]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: draft
+status: deferred
 replaces: [US-DLV-06/AC2, US-DLV-06/AC4]
 ---
 
@@ -22,6 +22,7 @@ As a person delivering a ticket, I want the gates to skip tests for `(review)` c
 
 ## Notes
 
+- Retired 2026-11-27: DEC-DEF-05 reversed (decision log, "Review-only work stays in untestable tasks"); this ID is never reused.
 - Decided 2026-11-27 (DEC-DEF-05, option (b); decision log, "Review-only criteria carry a (review) marker").
 - Replaces US-DLV-06/AC2 and AC4 (shown to the owner and approved on 2026-11-27): each becomes the same rule with `(review)` criteria left out. They are crossed out when this story is delivered.
 - `backlog_check.py`'s side is US-DEF-34; the reviewer writes the `Checked by review:` lines (TASK-DLV-04).
