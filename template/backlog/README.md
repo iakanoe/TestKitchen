@@ -106,7 +106,26 @@ Facts the work depends on (with their certainty), exclusions, related tickets.
 
 **Task:** a plain description, then `## Acceptance criteria` (`- AC1: <checkable statement>`; Given/when/then not required), `## Notes`, `## Open questions`.
 
-**Decision:** `## Question`, `## Context` (what `docs/` already settles), `## Options` (only options already recorded; otherwise "None recorded"), `## Recommendation`, `## Decides` (the tickets it unblocks). Once decided, add `## Outcome` (the date, the answer, who decided, where it is recorded) and set `status: done`.
+**Decision:** `## Question`, `## Context` (what `docs/` already settles), `## Options` (only options already recorded; otherwise "None recorded", optionally followed by "Proposals:" and the agent's own proposals), `## Recommendation`, `## Decides` (the tickets it unblocks). Once decided, add `## Outcome` (the date, the answer, who decided, where it is recorded) and set `status: done` (or `deferred`).
+
+The DEC format (DEF-R51):
+
+- While a DEC is not `done` or `deferred`, each option under `## Options`, including the agent's own proposals listed after "None recorded. Proposals:", is an unindented bullet `- (x) …`, where `x` is one lowercase letter, followed by indented sub-bullets `- For: …` and `- Against: …` before the next option (a plain `For:` or `Against:` line is also accepted).
+- A DEC that is not `done` or `deferred` has no `## Outcome`: deciding it in its file while it is still open is an error.
+- A `done` or `deferred` DEC has an `## Outcome`.
+
+```markdown
+## Options
+
+None recorded. Proposals:
+
+- (a) <option>.
+  - For: <what it gives>.
+  - Against: <what it costs, and what it conflicts with>.
+- (b) <option>.
+  - For: <what it gives>.
+  - Against: <what it costs, and what it conflicts with>.
+```
 
 **Spike:** `## Goal`, `## Context`, `## Done when`, `## Findings` (empty until the spike runs).
 
