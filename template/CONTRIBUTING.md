@@ -46,6 +46,8 @@ Ticket rules are in [`backlog/README.md`](backlog/README.md); project rules are 
 
 **Sandbox opt-in.** On a machine you have chosen to run unattended, set `KITCHEN_GUARD_SANDBOX=1` in the git-ignored `.claude/settings.local.json` (`{"env": {"KITCHEN_GUARD_SANDBOX": "1"}}`). The guard then lets its "ask" cases through without a prompt. Denials and force pushes are unchanged, and the agent still stops for everything the playbooks list, through its own questions rather than the guard.
 
+**Subagents.** In a subagent (a call whose hook input carries an `agent_id`), the guard refuses what it would otherwise ask about, keeping the ask's reasons and telling the subagent to hand the step back to the main session, where the person is asked. In Claude Code's auto permission mode a subagent's asks are approved by a classifier rather than the person, so a refusal is the only answer that holds. The sandbox opt-in applies first, so its asks still pass; a force push from a subagent is refused.
+
 ## 3. When an agent stops and asks
 
 An agent stops, asks a person, and waits for: a DEC to decide; a criterion that is ambiguous or depends on unbuilt work; behavior a user would notice that nothing settles; any change under `docs/` or to a ticket's criteria; a gap that blocks the ticket; a ticket that would merge unfinished; a test that would be weakened; a check or gate it can't make pass within scope; a failed deploy; a platform change; a credential; and, by autonomy level, approvals and merges. The full list is in `playbooks/deliver.md`, "Stop and ask". It asks everything in one round, commits and pushes before waiting, and in a headless run prints its questions and stops. Everything else it decides and logs.

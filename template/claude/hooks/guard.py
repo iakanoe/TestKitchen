@@ -76,7 +76,15 @@ denial of another part.
 
 Sandbox opt-in: with `KITCHEN_GUARD_SANDBOX=1` (set per machine in the git-ignored
 `.claude/settings.local.json`), "ask" lets the call through without a prompt. Denials and
-force pushes are unchanged. settings.json runs the guard with `|| exit 2`: a guard that cannot
+force pushes are unchanged.
+
+Subagents: when the hook input carries an `agent_id` that is present and neither null nor an
+empty string (a call made in a subagent), every ask left after the sandbox opt-in becomes a
+deny whose reason keeps the ask's reasons and tells the subagent to hand the step back to the
+main session, where the person is asked (GRD-R36). In Claude Code's auto permission mode a
+subagent's ask is approved by a classifier, not the person. Allows and denies are unchanged.
+
+settings.json runs the guard with `|| exit 2`: a guard that cannot
 start (a syntax error, no python3) blocks the call instead of letting it through.
 
 It reads commands literally: text built at run time (variables that assemble a command, an
@@ -120,6 +128,26 @@ def deny(reason):
 # part of a call (a force push, a host command) never hides a denial of a later part.
 ASKS = []
 
+# True when the call was made in a subagent (set by main() from the hook input's `agent_id`;
+# GRD-R36). finish() then denies what it would ask, ending the reason with HAND_BACK.
+SUBAGENT = False
+HAND_BACK = ("This call came from a subagent, where the guard can't ask the person; hand this step back to the main "
+             "session, which runs it and the person is asked there.")
+
+
+def is_subagent(call):
+    """True when the hook input's `agent_id` is present and neither null nor an empty string.
+
+    Any other value (a number, an object, `false`, whitespace) counts as a subagent's call, so
+    an unexpected value fails closed for asks; null and "" read as a main-session call so the
+    main session is never blocked if Claude Code ever sends them there. `agent_type` alone
+    does not count: it is also set in sessions started with `--agent`.
+    """
+    if "agent_id" not in call:
+        return False
+    value = call["agent_id"]
+    return value is not None and not (isinstance(value, str) and value == "")
+
 
 def ask(reason, firm=False):
     ASKS.append((reason, firm))
@@ -143,6 +171,12 @@ def finish():
     for reason, f in sorted(ASKS, key=lambda x: not x[1]):  # firm reasons first
         if reason not in reasons:
             reasons.append(reason)
+    # GRD-R36 (US-GRD-17): an ask from a subagent's call is denied instead, after the sandbox
+    # opt-in above, because in Claude Code's auto permission mode a subagent's ask is approved
+    # by a classifier rather than the person. The deny keeps the ask's reasons and ends with the
+    # hand-back line, so the main session, where the ask reaches the person, runs the step.
+    if SUBAGENT:
+        emit("deny", "\n".join(reasons + [HAND_BACK]))
     emit("ask", "\n".join(reasons))
 
 
@@ -1484,6 +1518,8 @@ def main():
     call = json.load(sys.stdin)
     if not isinstance(call, dict):
         raise ValueError("the hook input is not a JSON object")
+    global SUBAGENT
+    SUBAGENT = is_subagent(call)
     tool = call.get("tool_name")
     if tool not in TOOLS:
         return

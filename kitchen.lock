@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit ba8289bb4b63)",
+  "source": "local checkout (commit 51f25a48e461)",
   "options": {
     "host": "github",
     "no_claude": false,
@@ -10,7 +10,7 @@
   },
   "files": {
     ".claude/agents/ticket-reviewer.md": "1f6eb905953f6d123c6912cfbd6751431a739e7a3b12e4c5123133ba0273e7f1",
-    ".claude/hooks/guard.py": "71c7280648914c59d896642635d8b256355ec2301ab007971308f521b2b5102e",
+    ".claude/hooks/guard.py": "1512d4457c8da19ab8404cf0501da47e78fb2b25afe0b948beeada6274c78f56",
     ".claude/settings.json": "af0bf7e84ab744abff72a297d4c4ddbb7eb08d76bbb39471c1f2a25ab528c741",
     ".claude/skills/define/SKILL.md": "0c177fa6b508dbd385a004c4a6eeb058ae2f12c1fc62a7dce39b60ea39b40dfe",
     ".claude/skills/deliver/SKILL.md": "27d945116220a20548e48549e20909712caab67fa40dfc277351033a07617aa7",
@@ -18,7 +18,7 @@
     ".github/workflows/check.yml": "1acc84ca99c1ebb93273c5afdf262e660d608ed50ea1e0d5d92942b52a133c11",
     "AGENTS.md": "6b69d286a79d26b9cc37c1919de3f2074d39cb144443b488e7470648789a0978",
     "CLAUDE.md": "7d057d436960178505107b36a282988ef30098e2213f72aef3fec5acfaf84c55",
-    "CONTRIBUTING.md": "82e2611efc6c3fcd9594b728294efd3f7992a6c42f90ed90a39746ec5ea56b7f",
+    "CONTRIBUTING.md": "58e1524efc688f98c7b893cdb81c760284c9403112f183ef16aed040ecf9a049",
     "backlog/README.md": "7a743a3f7bd6b197abc6a57ec08956b8fee2e43b45ab9f6c27df48af48ce0564",
     "docs/architecture/README.md": "2a05a1503d1ac74003122b1b8e8e4e445008d9e36d286956a504f3aa93f62076",
     "docs/decision-log.md": "a6acf2f3b2b27033e2b670c659c6a75b15a2b5888d7396a46a080e7103037bfc",

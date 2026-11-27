@@ -4,12 +4,17 @@ Test Kitchen follows semantic versioning. Each release has a `## x.y.z — date`
 
 ## Unreleased
 
+### Changed
+
+- The guard refuses, instead of asking, a call made in a subagent that it would ask about (the hook input carries an `agent_id`), keeping the ask's reasons and telling the subagent to hand the step back to the main session. In auto permission mode a subagent's asks were approved by a classifier rather than the person. The sandbox opt-in (`KITCHEN_GUARD_SANDBOX=1`) applies first; a force push from a subagent is refused.
+
 ### Fixed
 
 - `backlog_check.py --gaps` no longer reports an installed but undefined project as fully defined. It now lists a missing or skeleton-only `docs/product.md`, a project with no requirements, and existing code while no epic claims any with `code:`.
 
 ### Migration notes
 
+- After updating, steps a subagent ran that the guard asks about (protected edits, git settings, host writes, force pushes) are refused in the subagent; run them from the main session, where you are asked.
 - After updating, `--gaps` may list new lines for projects that never filled `docs/product.md`, defined no requirements, or gave no epic `code:` globs. Close them with `/define` (`new`, `adopt`, or `sweep`).
 
 ## 0.1.0 — 2026-11-25

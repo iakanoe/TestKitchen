@@ -22,8 +22,9 @@ Test Kitchen was developed and tested in Claude Code, and it is the only agent w
   - a merge must be exactly the command the host adapter allows, and the guard runs `deliver.py gate merge` first; on the manual host, and with `autonomy: pr` or `supervised`, every agent merge is refused;
   - editing `docs/` (except `docs/decision-log.md`, which every delivery appends to), `.claude/`, `.github/`, `.gitlab/`, `.gitlab-ci.yml`, `.git/`, `playbooks/`, the framework scripts listed in `kitchen.lock`, `kitchen.yml`, `kitchen.lock`, `CONTRIBUTING.md`, `AGENTS.md`, or `CLAUDE.md` asks a person (reading stays free);
   - git configuration writes, tokens in commands, and host API writes ask a person;
-  - if the guard itself fails, the call is refused.
-- **Unattended machines.** Setting `KITCHEN_GUARD_SANDBOX=1` in the git-ignored `.claude/settings.local.json` lets the guard's "ask" cases through without a prompt on a machine you chose to run unattended. Refusals (the push and merge rules, the merge gate) are unchanged.
+  - if the guard itself fails, the call is refused;
+  - in a subagent, whatever the guard would ask about is refused instead, with the same reasons and a line telling the subagent to hand the step back to the main session, where you are asked. In auto permission mode a subagent's asks are approved by a classifier rather than by you.
+- **Unattended machines.** Setting `KITCHEN_GUARD_SANDBOX=1` in the git-ignored `.claude/settings.local.json` lets the guard's "ask" cases through without a prompt on a machine you chose to run unattended, in subagents too. Refusals (the push and merge rules, the merge gate) are unchanged, and a force push from a subagent is refused.
 - **Headless runs** (`claude -p "/deliver all"`): the guard's questions become refusals, and the agent prints decision briefs and stops when a person is needed.
 
 The installer's `doctor` mode (`curl -fsSL https://raw.githubusercontent.com/iakanoe/TestKitchen/v0.1.0/init.py | python3 - doctor`) checks that the guard is registered and not switched off.

@@ -2,6 +2,20 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — The guard's hand-back line for subagent calls
+
+- Decision: A subagent's deny (GRD-R36, US-GRD-17) is the ask's reasons, deduplicated and in the ask's order (force-push reasons first), followed by one last line: "This call came from a subagent, where the guard can't ask the person; hand this step back to the main session, which runs it and the person is asked there." The rule sits in `finish()` after the sandbox opt-in, read from `agent_id` by `is_subagent()` as "How the guard reads agent_id" says. Documented in the guard's docstring, `template/CONTRIBUTING.md` (the root copy through `init.py update`), `guide/agents.md`, and `CHANGELOG.md` (a change and a migration note).
+- Why: AC2 requires the deny to keep every reason the ask gives and tell the subagent to hand the step back; putting the reasons first keeps them identical to what the main session's ask shows, and a fixed last line lets the subagent and the tests find the hand-back. The wording names the subagent, the reason (the guard can't ask the person there), and the action.
+- Decided by: the delivering agent (wording left open by the ticket; plan review WARNING 1).
+- Recorded in: `template/claude/hooks/guard.py`; `tests/test_guard_subagent.py`; US-GRD-17's delivery record.
+
+### 2026-11-27 — Unchanged-behavior criteria get a boundary test
+
+- Decision: US-GRD-17/AC3, AC4, and AC6 describe behavior that must stay as it is (main-session calls still ask, the sandbox still lets asks through, allows and denies stay), so their direct tests passed before the change and `gate red` refused them. Each also got a boundary test that pairs the unchanged case with its contrast under the new rule: main-session forms ask while a present `agent_id` denies (AC3), the same subagent call is denied without the opt-in and allowed with it (AC4), and over allowed, asked, and denied calls a subagent's decisions are the main session's with only the asks turned into denies (AC6). These fail on the old code only for the missing behavior; the direct tests stay too.
+- Why: `gate red` needs a failing tagged test per live criterion and a gate's FAIL is final; the boundary is what each criterion adds once the rule exists, so the test proves the criterion rather than working around the gate. No earlier delivery recorded a way to handle this.
+- Decided by: the delivering agent.
+- Recorded in: `tests/test_guard_subagent.py`; US-GRD-17's delivery record.
+
 ### 2026-11-27 — Delivery waits for each review's report
 
 - Decision: After running a plan, tests, or diff review, the delivering agent waits for its report before the next step; meanwhile it may read files and run read-only checks, but does not edit repository files, run `init.py update`, claim, or commit (DLV-R61, built by TASK-DLV-05). Define's refine reviews are left out.
