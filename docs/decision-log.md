@@ -2,6 +2,20 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — A cost report for this repository's delivery runs
+
+- Decision: This repository gets `tools/usage_report.py`, a developer tool that is not part of the product (not in `template/`, not installed, outside `kitchen.yml`'s `code` globs), built as a `chore/` change. It reads a Claude Code session transcript and its subagents' transcripts and prints, per session and per subagent: raw token counts (input, cache reads, 5-minute and 1-hour cache writes, output); effective tokens weighted by a per-model table of multipliers taken from the Anthropic pricing page, with the page's URL and the date checked; the share of effective tokens per group (instructions, framework docs, code and ticket reading, writing, gates and tests, git and host, app tools, conversation); the number of steps; and the peak context. `--json` prints the same for before-and-after comparisons. The groups and the split of carried context between them are heuristic, and the report says so. Its tests use small synthetic transcripts, never a real one.
+- Why: SPK-DLV-01 and every later cost change need measurements made the same way each time. The transcript format is internal to Claude Code and "can break on any release" (code.claude.com, sessions page, checked 2026-11-27), and it works only with Claude Code, so it is not a product feature; the tool fails with a clear message when a field it needs is missing.
+- Decided by: Ianick Noejovich.
+- Recorded in: this entry; SPK-DLV-01.
+
+### 2026-11-27 — The US-DLV-38 run cost about 1.61M effective tokens, not 2.37M
+
+- Decision: The measured cost of the US-DLV-38 delivery run is corrected to about 1.61M effective tokens (1.28M in the main session, 0.32M in the three reviews). The 2.37M figure used a flat 0.1× weight for cache reads; the pricing page gives 0.05× for Claude Opus 5.5, the model that ran (1-hour cache writes 2× and output 5× were right). The shares barely change (instructions about 30%, code and ticket reading 20%, reviews 20%, writing 13%, framework docs 8%), so the conclusions of "Fresh context per ticket under /deliver all" stand.
+- Why: The figure is cited in later tickets and must be right.
+- Decided by: Ianick Noejovich.
+- Recorded in: SPK-DLV-01, TASK-DLV-03. The entry "Fresh context per ticket under /deliver all" keeps the old figure as history.
+
 ### 2026-11-27 — Agents check open decisions and evaluate options before recommending
 
 - Decision: Before recommending in a decision round, the agent searches the decision log and the open DECs for the same kind of question, and presents an option that matches an open DEC's option as that DEC, never as an ordinary choice (DEF-R49). Each option in a decision brief has one "For" and one "Against" line naming its cost and what in `docs/`, the backlog, or the decision log it conflicts with; the recommendation says why it beats each other option and the strongest reason against it; when the person questions a recommendation, the agent re-evaluates and says what it missed, or that nothing changed (DEF-R50). Delivery's questions round follows both (DLV-R59).
