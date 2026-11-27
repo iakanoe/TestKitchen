@@ -24,7 +24,7 @@ Ticket rules are in [`backlog/README.md`](backlog/README.md); project rules are 
 
 | Rule | Enforced by |
 | --- | --- |
-| Tickets are well formed (frontmatter, IDs, criteria, readiness, open questions, no `blocked_by` cycles, release order); cited requirements exist; test tags name live criteria of started tickets; a `done` story has a tagged test for every live criterion (adopted stories report test debt instead); every `TODO` names a ticket; `DEC-…` mentions exist | `backlog_check.py`, inside `deliver.py check` (CI) |
+| Tickets are well formed (frontmatter, IDs, criteria, readiness, open questions, no `blocked_by` cycles, release order); an open DEC's options each have a `For:` and an `Against:` line and it has no `## Outcome`, while a decided DEC has one; cited requirements exist; test tags name live criteria of started tickets; a `done` story has a tagged test for every live criterion (adopted stories report test debt instead); every `TODO` names a ticket; `DEC-…` mentions exist | `backlog_check.py`, inside `deliver.py check` (CI) |
 | The change request files every gap, decision, and platform change, pointing to tickets and decision-log entries that exist | `backlog_check.py --pr-body` (CI, and `gate merge`) |
 | A ticket change request has a plan row for every live criterion | `deliver.py gate pr` (CI) |
 | Each live criterion has a tagged test that fails before the implementation | `deliver.py gate red`, at step 6 |
