@@ -20,4 +20,4 @@ The Claude Code hook that runs before every shell command and file edit in an in
 
 ## Open
 
-- None.
+- DEC-GRD-05.
