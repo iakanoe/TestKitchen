@@ -2,6 +2,34 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — TASK-DLV-04 is refined after TASK-DEF-06
+
+- Decision: US-DEF-35 and TASK-DEF-06 passed refinement and are `ready`. TASK-DLV-04 stays `draft` and is refined right after TASK-DEF-06 is delivered; the five points its last ticket-mode review left are recorded in its Notes.
+- Why: TASK-DLV-04 points to rules TASK-DEF-06 has not written into `define.md` yet, so each review reasoned about text that does not exist and found new readings; it cannot be delivered before TASK-DEF-06 anyway, and refining it against the real text avoids rounds that would be redone.
+- Decided by: Ianick Noejovich.
+- Recorded in: US-DEF-35, TASK-DEF-06, TASK-DLV-04.
+
+### 2026-11-27 — Delivery's questions and self-decided items follow define's rules
+
+- Decision: Every question of delivery's step-3 questions round, including one that only confirms how to read a criterion, follows define's rules on open DECs and on evaluating options (DLV-R59, as TASK-DLV-04/AC3 states). Before deciding an item of "You decide, then log" itself, the agent checks the open DECs, and an item that matches an open DEC's option is asked, not decided (DLV-R60, TASK-DLV-04/AC4).
+- Why: The re-review of TASK-DLV-04 found that DLV-R59 could be read as covering only questions with real alternatives, which would let an agent frame a choice as a yes/no question to skip the evaluation, and that the items the agent decides itself could still pick an open DEC's option without any check, the 2026-11-26 failure through another door.
+- Decided by: Ianick Noejovich (every question, over the recommendation to limit it to real choices; the self-decided check as recommended).
+- Recorded in: DLV-R60; TASK-DLV-04.
+
+### 2026-11-27 — Review-only work stays in untestable tasks
+
+- Decision: The outcome of DEC-DEF-05, option (b) (the `(review)` marker), is reversed to its option (a): review-only work stays in untestable tasks, confirmed by the final review (DLV-R37). DEF-R47 and DEF-R48 are superseded by DEF-R14, and DLV-R56, DLV-R57, and DLV-R58 by DLV-R08: DEF-R14 and DLV-R08 are live again (the superseded markers added to them earlier the same day are removed), so the done stories that test them, US-DEF-10 and US-DLV-06, cover them again. Restoring them, rather than restating their rules under new IDs, is a step the playbook does not name; the owner chose it because new IDs would stay uncovered for good, since done tickets are never edited to cite them. US-DEF-34, US-DLV-43, and TASK-DEF-07 are deferred and retired (their IDs are never reused); the marker criteria of TASK-DEF-06 (AC1, AC2) and TASK-DLV-04 (AC1, AC2) are removed. DEC-DEF-05's file stays as it is: a done ticket is never rewritten, and this entry records the reversal. The questioning rules and the DEC check (DEF-R49, DEF-R50, DEF-R51, DLV-R59) stand.
+- Why: The ticket-mode reviews of the marker tickets found it would also change the criterion format check (DEF-R08), the freeze check in `gate pr` (DLV-R18), `gate red` and the freeze for stories whose criteria are all review-only, the plan and tests reviews and delivery steps 2 and 6, and the define playbook's "one allowed edit": about six requirements and four done criteria across two epics, several times the "2 or 3 tickets" estimated when DEC-DEF-05 was decided. The untestable-task route already works.
+- Decided by: Ianick Noejovich.
+- Recorded in: DEF-R14, DLV-R08 (restored); DEF-R47, DEF-R48, DLV-R56, DLV-R57, DLV-R58 (superseded); US-DEF-34, US-DLV-43, TASK-DEF-07 (deferred); TASK-DEF-06, TASK-DLV-04.
+
+### 2026-11-27 — Open DECs carry evaluated options; outcomes match status
+
+- Decision: `backlog_check.py` reports an error for an option of an open DEC (not `done` or `deferred`) without a `For:` and an `Against:` line, for an open DEC with an `## Outcome`, and for a `done` or `deferred` DEC without one (DEF-R51, built by US-DEF-35; the README's DEC format by TASK-DEF-06/AC5). DEC-DEF-06 and DEC-DEF-07 get For and Against lines now.
+- Why: It moves the DEC-file half of DEF-R50 from judgment into a check, catches a DEC decided in its file while still open, and costs nothing today: all 20 done DECs already have an Outcome. Chat briefs stay with the playbook rules of TASK-DEF-06.
+- Decided by: Ianick Noejovich.
+- Recorded in: DEF-R51; US-DEF-35, TASK-DEF-06; DEC-DEF-06, DEC-DEF-07.
+
 ### 2026-11-27 — How the cost report groups and checks a transcript
 
 - Decision: Besides the eight groups "A cost report for this repository's delivery runs" lists, `tools/usage_report.py` reports "Handing work to subagents" (prompts given to the Agent, Task, and SendMessage tools) and "Everything else" (tools it does not recognize, so an unknown tool shows up instead of hiding in another group). A subagent's final report (`SubagentHandback`) counts as conversation. Only `deliver.py gate` and `check`, `backlog_check.py`, and the tests run as `python3 -m unittest` or `python3 -m pytest` (how this repository runs them) count as gates and tests, unless the command starts with a read such as `cat` or `grep`; a bare `pytest` counts as reading; `deliver.py context`, `next`, `status`, and `pr-body` print tickets and count as ticket reading; a git command counts as git even when it names a framework file. A call is charged for what it read, not for what it wrote, and a block repeated across the records of one response is counted once. The tool stops with a message when a usage record lacks a token field or splits no cache writes into 5-minute and 1-hour ones, and on a file that is not UTF-8 JSON lines; a subagent with no model call is listed as skipped.
@@ -36,6 +64,7 @@ Every decision about Test Kitchen, newest first. Each entry is a level-3 heading
 - Why: It keeps review-only criteria in the tickets they belong to instead of splitting them into tasks late (as US-DLV-42 had to be), it clears the test debt no test can pay (about 150 of 636 lines, the owner's estimate), and it checks each such criterion by name, which the untestable-task route does not. Text tests (option (c)) were rejected: they prove only that words exist, as "Review-only stories become tasks" recorded. Until US-DEF-34 and US-DLV-43 are delivered, review-only work still uses untestable tasks.
 - Decided by: Ianick Noejovich.
 - Recorded in: DEF-R47, DEF-R48, DLV-R56, DLV-R57, DLV-R58; DEC-DEF-05 (outcome); US-DEF-34, US-DLV-43, TASK-DLV-04, TASK-DEF-06, TASK-DEF-07.
+- Superseded by: Review-only work stays in untestable tasks
 
 ### 2026-11-26 — TASK-DLV-03 waits for SPK-DLV-02; TASK-DEF-05 is ready
 

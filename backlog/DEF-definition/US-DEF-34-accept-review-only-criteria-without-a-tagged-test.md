@@ -7,7 +7,7 @@ source_reqs: [DEF-R47, DEF-R48]
 blocked_by: []
 owner: Ianick Noejovich
 assignee_type: either
-status: draft
+status: deferred
 replaces: [US-DEF-10/AC4, US-DEF-10/AC5, US-DEF-10/AC6]
 ---
 
@@ -22,6 +22,7 @@ As a person defining tickets, I want criteria that only a reviewer can check to 
 
 ## Notes
 
+- Retired 2026-11-27: DEC-DEF-05 reversed (decision log, "Review-only work stays in untestable tasks"); this ID is never reused.
 - Decided 2026-11-27 (DEC-DEF-05, option (b); decision log, "Review-only criteria carry a (review) marker").
 - Replaces US-DEF-10/AC4, AC5, and AC6 (shown to the owner and approved on 2026-11-27): each becomes the same rule with `(review)` criteria left out. They are crossed out when this story is delivered.
 - The gates' side is US-DLV-43; the reviewer's side and the docs are TASK-DLV-04 and TASK-DEF-06.
