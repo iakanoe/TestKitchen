@@ -73,8 +73,11 @@ FRAMEWORK_FILES = re.compile(
     r"playbooks/|AGENTS\.md|CONTRIBUTING\.md|CLAUDE\.md|backlog/README\.md|\.claude/(skills|agents)/"
 )
 # A shell call that runs a gate, the backlog check, or the tests (not one that only reads
-# those scripts, which is reading code).
-GATE_RUN = re.compile(r"python3? (-m (unittest|pytest)|scripts/(deliver|backlog_check)\.py)")
+# those scripts, which is reading code). `deliver.py context`, `next`, `status`, and `pr-body`
+# print tickets and requirements, so they are ticket reading, not gates.
+GATE_RUN = re.compile(
+    r"python3? (-m (unittest|pytest)|scripts/backlog_check\.py|scripts/deliver\.py (gate|check)\b)"
+)
 READ_FIRST = re.compile(r"^\s*(cat|sed|grep|head|tail|less)\b")
 GIT_RUN = re.compile(r"(^|[;&|]\s*)(git|gh|glab)\s")
 # A shell call that writes a file from a heredoc script (`python3 - <<EOF ... write(`).
@@ -94,6 +97,7 @@ class NoCalls(FormatError):
 # Every usage record must carry these: a renamed field would otherwise count as 0 and print a
 # smaller total with no warning (most input tokens are cache reads).
 USAGE_FIELDS = ("input_tokens", "output_tokens", "cache_read_input_tokens", "cache_creation_input_tokens")
+WRITE_SPLIT = ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")
 
 
 def prices_for(model):
@@ -121,10 +125,11 @@ def classify(name, tool_input):
             return WRITING
         if GATE_RUN.search(command) and not READ_FIRST.search(command):
             return GATES
-        if FRAMEWORK_FILES.search(command):
-            return FRAMEWORK
+        # Git before framework files: `git diff -- AGENTS.md` is git work, not a playbook read.
         if GIT_RUN.search(command):
             return GIT
+        if FRAMEWORK_FILES.search(command):
+            return FRAMEWORK
         return READING
     if name in ("Read", "Grep", "Glob"):
         return FRAMEWORK if FRAMEWORK_FILES.search(text) else READING
@@ -142,6 +147,8 @@ def load(path):
         lines = Path(path).read_text(encoding="utf-8").splitlines()
     except OSError as err:
         raise FormatError(f"cannot read {path}: {err.strerror}") from err
+    except UnicodeDecodeError as err:
+        raise FormatError(f"cannot read {path}: not UTF-8 text") from err
     records = []
     for number, line in enumerate(lines, 1):
         if not line.strip():
@@ -160,12 +167,20 @@ def analyze(path):
     calls = {}
     tool_group = {}  # tool_use id -> group
     saved_group = {}  # name of a saved tool output -> group of the call that produced it
+    seen_blocks = set()  # blocks already counted, for records that repeat a response
     for record in load(path):
         message = record.get("message") or {}
         content = message.get("content")
         if record.get("type") == "assistant":
             used, written = [], []
             for block in content if isinstance(content, list) else []:
+                if not isinstance(block, dict):
+                    continue
+                # A response stored as several records may repeat a block; count it once.
+                block_key = (message.get("id"), block.get("id") or json.dumps(block, sort_keys=True))
+                if block_key in seen_blocks:
+                    continue
+                seen_blocks.add(block_key)
                 if block.get("type") == "tool_use":
                     group = classify(block.get("name", ""), block.get("input") or {})
                     saved = SAVED_OUTPUT.search(json.dumps(block.get("input") or {}))
@@ -183,6 +198,10 @@ def analyze(path):
                 missing = [k for k in USAGE_FIELDS if k not in usage]
                 if missing:
                     raise FormatError(f"{path}: usage without {', '.join(missing)}")
+                split = usage.get("cache_creation") or {}
+                if usage["cache_creation_input_tokens"] and not all(k in split for k in WRITE_SPLIT):
+                    # 5-minute and 1-hour writes cost 1.25x and 2x; guessing would misprice them.
+                    raise FormatError(f"{path}: cache writes without their 5-minute and 1-hour split")
                 key = message.get("id") or id(record)
                 if key in calls:
                     # One response is stored as several records with the same id and usage.
@@ -197,6 +216,8 @@ def analyze(path):
         elif record.get("type") == "user":
             blocks = content if isinstance(content, list) else [{"type": "text", "text": content or ""}]
             for block in blocks:
+                if not isinstance(block, dict):
+                    continue
                 if block.get("type") == "tool_result":
                     group = tool_group.get(block.get("tool_use_id"), OTHER)
                     body = json.dumps(block.get("content"))
@@ -226,10 +247,9 @@ def summarize(events):
             unpriced.add(model or "(none)")
         fresh = usage.get("input_tokens", 0)
         read = usage.get("cache_read_input_tokens", 0)
-        written = usage.get("cache_creation_input_tokens", 0)
-        split = usage.get("cache_creation") or {}
+        split = usage.get("cache_creation") or {}  # checked in analyze() when there are writes
         write_1h = split.get("ephemeral_1h_input_tokens", 0)
-        write_5m = split.get("ephemeral_5m_input_tokens", written - write_1h)
+        write_5m = split.get("ephemeral_5m_input_tokens", 0)
         output = usage.get("output_tokens", 0)
         raw["input"] += fresh
         raw["cache_read"] += read

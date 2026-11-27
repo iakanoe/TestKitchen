@@ -97,6 +97,11 @@ class CountingTest(Transcripts):
         # The test run's output tokens (5 x 10) are charged to the gates and tests group.
         self.assertGreaterEqual(groups[ur.GATES], 50)
 
+    def test_a_response_stored_twice_counts_its_blocks_once(self):
+        once = [r for i, r in enumerate(session()) if i != 2]  # drop the repeated record
+        self.assertEqual(ur.analyze(self.write("twice.jsonl", session()))["groups"],
+                         ur.analyze(self.write("once.jsonl", once))["groups"])
+
     def test_a_call_is_not_charged_for_what_it_writes(self):
         # The first call writes a 10k-token file; it read only its instructions, so all of
         # its input is instructions and only its output is charged to writing.
@@ -179,6 +184,20 @@ class CommandLineTest(Transcripts):
         self.assertEqual(done.returncode, 1)
         self.assertIn("usage without cache_read_input_tokens", done.stderr)
 
+    def test_stops_when_cache_writes_lack_their_split(self):
+        broken = usage(3, write_1h=1000, output=1)
+        del broken["cache_creation"]
+        done = self.run_tool(str(self.write("s.jsonl", [call("m1", OPUS, broken)])))
+        self.assertEqual(done.returncode, 1)
+        self.assertIn("without their 5-minute and 1-hour split", done.stderr)
+
+    def test_stops_on_a_file_that_is_not_utf8(self):
+        path = self.dir / "s.jsonl"
+        path.write_bytes(b"\xff\xfe\x00bad\n")
+        done = self.run_tool(str(path))
+        self.assertEqual(done.returncode, 1)
+        self.assertIn("not UTF-8 text", done.stderr)
+
     def test_stops_when_no_call_has_usage(self):
         done = self.run_tool(str(self.write("s.jsonl", [{"type": "user", "message": {"content": "hi"}}])))
         self.assertEqual(done.returncode, 1)
@@ -199,6 +218,11 @@ class ClassifyTest(unittest.TestCase):
             ("Read", {"file_path": "template/scripts/deliver.py"}, ur.READING),
             ("Bash", {"command": "sed -n 1,40p template/scripts/deliver.py"}, ur.READING),
             ("Bash", {"command": "python3 scripts/deliver.py gate red X"}, ur.GATES),
+            ("Bash", {"command": "python3 scripts/deliver.py check"}, ur.GATES),
+            ("Bash", {"command": "python3 scripts/deliver.py context X"}, ur.READING),
+            ("Bash", {"command": "python3 scripts/deliver.py next"}, ur.READING),
+            ("Bash", {"command": "git diff origin/main -- AGENTS.md"}, ur.GIT),
+            ("Bash", {"command": "cat playbooks/deliver.md"}, ur.FRAMEWORK),
             ("Bash", {"command": "python3 - <<'EOF'\nopen(p,'w').write(s)\nEOF"}, ur.WRITING),
             ("Bash", {"command": "git push -u origin chore/x"}, ur.GIT),
             ("Edit", {"file_path": "template/scripts/deliver.py"}, ur.WRITING),
