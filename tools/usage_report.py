@@ -86,6 +86,16 @@ class FormatError(Exception):
     """The transcript lacks a field this tool needs: its format may have changed."""
 
 
+class NoCalls(FormatError):
+    """A transcript with no model call: a format change for the session, but for a subagent
+    usually one stopped before its first response, which is reported and skipped."""
+
+
+# Every usage record must carry these: a renamed field would otherwise count as 0 and print a
+# smaller total with no warning (most input tokens are cache reads).
+USAGE_FIELDS = ("input_tokens", "output_tokens", "cache_read_input_tokens", "cache_creation_input_tokens")
+
+
 def prices_for(model):
     for prefix in sorted(PRICES, key=len, reverse=True):
         if model and model.startswith(prefix):
@@ -154,7 +164,7 @@ def analyze(path):
         message = record.get("message") or {}
         content = message.get("content")
         if record.get("type") == "assistant":
-            used = []
+            used, written = [], []
             for block in content if isinstance(content, list) else []:
                 if block.get("type") == "tool_use":
                     group = classify(block.get("name", ""), block.get("input") or {})
@@ -165,23 +175,25 @@ def analyze(path):
                         group = saved_group[saved.group(1)]
                     tool_group[block.get("id")] = group
                     used.append(group)
-                    events.append(("content", tokens(json.dumps(block.get("input"))), group))
+                    written.append(("content", tokens(json.dumps(block.get("input"))), group))
                 elif block.get("type") == "text":
-                    events.append(("content", tokens(block.get("text", "")), CONVERSATION))
+                    written.append(("content", tokens(block.get("text", "")), CONVERSATION))
             usage = message.get("usage")
-            if usage is None:
-                continue
-            missing = [k for k in ("input_tokens", "output_tokens") if k not in usage]
-            if missing:
-                raise FormatError(f"{path}: usage without {', '.join(missing)}")
-            key = message.get("id") or id(record)
-            if key in calls:
-                # One response is stored as several records with the same id and usage.
-                calls[key][3].extend(used)
-                continue
-            call = ["call", usage, message.get("model", ""), used]
-            calls[key] = call
-            events.append(call)
+            if usage is not None:
+                missing = [k for k in USAGE_FIELDS if k not in usage]
+                if missing:
+                    raise FormatError(f"{path}: usage without {', '.join(missing)}")
+                key = message.get("id") or id(record)
+                if key in calls:
+                    # One response is stored as several records with the same id and usage.
+                    calls[key][3].extend(used)
+                else:
+                    call = ["call", usage, message.get("model", ""), used]
+                    calls[key] = call
+                    events.append(call)
+            # What a call writes enters the context after the call: the call read what came
+            # before it, and its own blocks are read by the next call.
+            events.extend(written)
         elif record.get("type") == "user":
             blocks = content if isinstance(content, list) else [{"type": "text", "text": content or ""}]
             for block in blocks:
@@ -194,7 +206,7 @@ def analyze(path):
                 elif block.get("type") == "text":
                     events.append(("content", tokens(block.get("text", "")), CONVERSATION))
     if not calls:
-        raise FormatError(f"{path}: no model call with usage found; the transcript format may have changed")
+        raise NoCalls(f"{path}: no model call with usage found; the transcript format may have changed")
     return summarize(events)
 
 
@@ -271,15 +283,21 @@ def subagents(session_path):
 def report(session_path):
     session_path = Path(session_path)
     main = analyze(session_path)
-    subs = []
+    subs, skipped = [], []
     for label, agent_type, path in subagents(session_path):
-        result = analyze(path)
+        try:
+            result = analyze(path)
+        except NoCalls:
+            # A subagent stopped before its first response cost nothing; say so and go on.
+            skipped.append({"label": label, "file": path.name})
+            continue
         result.update({"label": label, "agent_type": agent_type, "file": path.name})
         subs.append(result)
     return {
         "session": session_path.name,
         "main": main,
         "subagents": subs,
+        "skipped_subagents": skipped,
         "total_effective": main["effective"] + sum(s["effective"] for s in subs),
         "note": "Groups are estimates: each call's input is split by the estimated share of each kind of content in its context.",
     }
@@ -306,6 +324,9 @@ def render(data):
             out.append(f"  {group:<30} {value:>12,}  {share(value, part['effective']):>4}")
         if part["unpriced_models"]:
             out.append(f"  not in the price table, default multipliers used: {', '.join(part['unpriced_models'])}")
+    for skipped in data["skipped_subagents"]:
+        out.append("")
+        out.append(f"Subagent skipped, no model call in its transcript: {skipped['label']} ({skipped['file']})")
     out.append("")
     out.append(data["note"])
     return "\n".join(out)

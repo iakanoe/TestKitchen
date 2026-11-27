@@ -97,6 +97,18 @@ class CountingTest(Transcripts):
         # The test run's output tokens (5 x 10) are charged to the gates and tests group.
         self.assertGreaterEqual(groups[ur.GATES], 50)
 
+    def test_a_call_is_not_charged_for_what_it_writes(self):
+        # The first call writes a 10k-token file; it read only its instructions, so all of
+        # its input is instructions and only its output is charged to writing.
+        records = [
+            {"type": "user", "message": {"content": "go"}},
+            call("m1", OPUS, usage(0, write_1h=1000, output=7),
+                 [tool_use("t1", "Write", {"file_path": "a.py", "content": "w" * 40000})]),
+        ]
+        groups = ur.analyze(self.write("s.jsonl", records))["groups"]
+        self.assertEqual(groups[ur.INSTRUCTIONS], 2 * 1000)
+        self.assertEqual(groups[ur.WRITING], 5 * 7)
+
     def test_a_saved_output_read_back_keeps_the_group_that_produced_it(self):
         records = [
             call("m1", OPUS, usage(10, write_1h=500, output=5),
@@ -129,6 +141,15 @@ class SubagentTest(Transcripts):
         self.assertIn("Subagent: Plan review (ticket-reviewer)", text)
         self.assertIn("not in the price table", text)
 
+    def test_skips_a_subagent_with_no_model_call_and_reports_the_rest(self):
+        main_path = self.write("s.jsonl", session())
+        self.write("s/subagents/agent-a2.jsonl", [{"type": "user", "message": {"content": "start"}}])
+        data = ur.report(main_path)
+        self.assertEqual(data["subagents"], [])
+        self.assertEqual(data["skipped_subagents"], [{"label": "agent-a2", "file": "agent-a2.jsonl"}])
+        self.assertEqual(data["total_effective"], data["main"]["effective"])
+        self.assertIn("Subagent skipped, no model call", ur.render(data))
+
 
 class CommandLineTest(Transcripts):
     def test_json_output_holds_the_same_report(self):
@@ -150,6 +171,13 @@ class CommandLineTest(Transcripts):
         done = self.run_tool(str(path))
         self.assertEqual(done.returncode, 1)
         self.assertIn("usage without output_tokens", done.stderr)
+
+    def test_stops_when_a_usage_record_lacks_a_cache_field(self):
+        broken = usage(3, read=100, output=1)
+        del broken["cache_read_input_tokens"]
+        done = self.run_tool(str(self.write("s.jsonl", [call("m1", OPUS, broken)])))
+        self.assertEqual(done.returncode, 1)
+        self.assertIn("usage without cache_read_input_tokens", done.stderr)
 
     def test_stops_when_no_call_has_usage(self):
         done = self.run_tool(str(self.write("s.jsonl", [{"type": "user", "message": {"content": "hi"}}])))
