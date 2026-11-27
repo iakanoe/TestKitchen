@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-27 — The guard denies in a subagent what it would ask
+
+- Decision: When a call carries a non-empty `agent_id` (it was made in a subagent), every ask the guard would give becomes a deny that tells the subagent to hand the step back to the main session (GRD-R36, built by US-GRD-17). Sandbox mode applies first and is unchanged, so its asks still pass; a force push, which asks even in sandbox mode, is denied in a subagent. Closes DEC-GRD-05 with option (a). GRD-R36 narrows, without contradicting, the done criteria US-GRD-08/AC1, AC4, AC5, US-GRD-09/AC1 to AC4, and US-GRD-10/AC4: they describe calls without an `agent_id`, which their tests send none of, so no `replaces:` is needed.
+- Why: SPK-DLV-02 found that in auto mode the guard's asks from subagents are approved by the classifier instead of the person. Run by hand on the normal delivery steps (`init.py update`, commits, plain pushes of the ticket's branch, the `gh pr` steps, every gate and `record`, edits to `template/`, `tests/`, `backlog/`, `guide/`, `CHANGELOG.md`, and the decision log), the guard asks about none of them, so the deny falls only on steps that need the person anyway. Listing the eight criteria under `replaces:` would restate behavior that does not change and push US-GRD-17 past the split threshold.
+- Decided by: Ianick Noejovich (option (a), sandbox unchanged, and the narrowing reading of the done criteria).
+- Recorded in: GRD-R36; DEC-GRD-05 (outcome); US-GRD-17; TASK-DLV-03 (now blocked by US-GRD-17); US-GRD-16 (note).
+
 ### 2026-11-27 — TASK-DLV-04 is refined after TASK-DEF-06
 
 - Decision: US-DEF-35 and TASK-DEF-06 passed refinement and are `ready`. TASK-DLV-04 stays `draft` and is refined right after TASK-DEF-06 is delivered; the five points its last ticket-mode review left are recorded in its Notes.
