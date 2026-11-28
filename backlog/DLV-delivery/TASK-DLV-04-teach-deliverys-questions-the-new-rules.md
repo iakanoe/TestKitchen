@@ -7,7 +7,7 @@ source_reqs: [DLV-R62, DLV-R63, DLV-R65]
 blocked_by: [TASK-DEF-08]
 owner: Ianick Noejovich
 assignee_type: either
-status: ready
+status: in-progress
 refined: 2026-11-27
 ---
 
