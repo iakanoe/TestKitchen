@@ -2,6 +2,13 @@
 
 Every decision about Test Kitchen, newest first. Each entry is a level-3 heading with the date, an em dash, and a short unique title, and says what was decided, why, who decided, and where it is recorded. Change requests cite entries by title ("Log: <title>"), so a title is never renamed; a replaced decision gets a "Superseded by: <new title>" line. Entries before the first release come from the planning conversation that produced `docs/spec-v0.1.md`; the project owner decided each one.
 
+### 2026-11-28 — How define words the wider open-DEC rule
+
+- Decision: TASK-DEF-08 widened the "Check open decisions before recommending" bullet in define's "Questioning" (`template/playbooks/define.md`, installed into `playbooks/define.md` by `init.py update`). It keeps the bullet's name and the search of the decision log and the open DECs, and now says to present an option that matches an open DEC's option, "or otherwise answers an open DEC's question", as that DEC. The reason keeps its first clause and adds that an answer the DEC does not list settles it just as silently once the person accepts it as an ordinary choice, as the refinement note asked. The wording follows DEF-R52; no other text changed. No gaps were filed and no tests changed (an untestable task, DLV-R37).
+- Why: DEF-R52 fixes what the bullet must say ("An answer to an open DEC's question counts as that DEC"); the exact words were the agent's to choose. Keeping the name keeps TASK-DLV-04/AC5's pointer valid.
+- Decided by: the delivering agent (wording only), under DEF-R52 as decided by Ianick Noejovich.
+- Recorded in: TASK-DEF-08; `template/playbooks/define.md`.
+
 ### 2026-11-27 — TASK-DLV-04, TASK-DLV-05, and TASK-DEF-08 are ready
 
 - Decision: TASK-DLV-04, TASK-DLV-05, and TASK-DEF-08 passed refinement and are `ready`, refined 2026-11-27, owned by Ianick Noejovich. TASK-DLV-04 needed seven ticket-mode reviews; TASK-DLV-05 and TASK-DEF-08 three each. No review found a CRITICAL; every WARNING was settled with the owner (decision log, "How the refinement reviews of TASK-DLV-04, TASK-DLV-05, and TASK-DEF-08 were settled"), and the last reviews' suggestions are noted on the tickets for the delivering agent. TASK-DLV-04 waits for TASK-DEF-08 (`blocked_by`).

@@ -75,7 +75,7 @@ A product is defined in this order, because each layer is the input of the next.
 - **Does this need deciding now?** Ask yourself before every decision. If nothing ready, nothing in the current release slice, and nothing being built depends on it, propose deferring it. Deferring is itself a decision: it is logged, the DEC gets `status: deferred`, and every ticket that names it states its interim behavior (`Until decided: …`) or is deferred with it.
 - **Short answers are normal** ("a", "ok", "1 yes, 2 no"). If an answer is ambiguous, say how you read it when you report back.
 - **Options come from the record.** Present only the options `docs/` or the DEC records as recorded options; label your own as proposals.
-- **Check open decisions before recommending.** Before you recommend anything in a decision round, search `docs/decision-log.md` and the open DECs (every DEC that is not `done` or `deferred`) for the same kind of question. Present an option that matches an open DEC's option as that DEC (name it and run its decision round), never as an ordinary choice: picking it in passing would decide the DEC without the person seeing it.
+- **Check open decisions before recommending.** Before you recommend anything in a decision round, search `docs/decision-log.md` and the open DECs (every DEC that is not `done` or `deferred`) for the same kind of question. Present an option that matches an open DEC's option, or otherwise answers an open DEC's question, as that DEC (name it and run its decision round), never as an ordinary choice: picking it in passing would decide the DEC without the person seeing it, and an answer the DEC does not list settles it just as silently once the person accepts it as an ordinary choice.
 
 ### Decision format
 

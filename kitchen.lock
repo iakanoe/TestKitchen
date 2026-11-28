@@ -2,7 +2,7 @@
   "about": "Written by Test Kitchen's init.py; do not edit. update and doctor compare files against these hashes.",
   "lock_format": 1,
   "version": "0.1.0",
-  "source": "local checkout (commit d5d37859e84e)",
+  "source": "local checkout (commit ec8bfb6cb25c)",
   "options": {
     "host": "github",
     "no_claude": false,
@@ -24,7 +24,7 @@
     "docs/decision-log.md": "a6acf2f3b2b27033e2b670c659c6a75b15a2b5888d7396a46a080e7103037bfc",
     "docs/product.md": "cadcb89e46977713ffd9f708327e170af96a819315f636baf8cf6b35341dbe1f",
     "docs/requirements/README.md": "9787d285bb7b10f8040bb619dab20e537a7608d0043243786a383c87777d40fe",
-    "playbooks/define.md": "5c4532a2726a7e7cb7f245f8cdd344b24768d6649d375144167e0c73fb03c65f",
+    "playbooks/define.md": "1dae9cf560e53578948fb25e9650974b9cd0b638af533b6c4fc95dc3e4f41255",
     "playbooks/deliver.md": "77ccc4ea8047241313f39cb99246d945e5573164b38401807aa238a5eb16cb15",
     "playbooks/review.md": "87a96ad8cef5867dec25a23ae9c93f03057ccb47995c8024be5d2d7a4af72738",
     "scripts/backlog_check.py": "59f1d97b331256dd0063a546cf6591c56905fe0dbcebc5f5169dfe28f580bb79",
